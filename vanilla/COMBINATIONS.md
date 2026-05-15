@@ -298,12 +298,142 @@ CSS puro es siempre más ligero.
 
 ---
 
+## 5b. Técnicas Zentry (adrianhajdin/award-winning-website — Awwwards SOTM)
+
+### polygon() clip-path morph en scroll — transición geométrica
+*La técnica más característica de Zentry. Nosotros solo usamos `inset()` (rectangular).*
+```js
+/* El video hero empieza con forma de trapecio irregular */
+gsap.set('#video-frame', {
+  clipPath: 'polygon(14% 0, 72% 0, 88% 90%, 0 95%)',
+  borderRadius: '0% 0% 40% 10%',
+});
+/* Al scrollear se expande a rectángulo completo */
+gsap.from('#video-frame', {
+  clipPath: 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)',
+  borderRadius: '0% 0% 0% 0%',
+  ease: 'power1.inOut',
+  scrollTrigger: {
+    trigger: '#video-frame',
+    start: 'center center',
+    end: 'bottom center',
+    scrub: true,
+  },
+});
+```
+**Diferencia clave vs nuestro `inset()`:**
+- `inset()` → reveal desde un borde (top, bottom, left, right)
+- `polygon()` → morph entre cualquier forma — diamante, trapecio, flecha, orgánico
+- Ambos son strings que GSAP interpola — misma técnica, más poder con polygon
+
+---
+
+### Clip-path expand fullscreen — reveal cinematográfico
+*Elemento pequeño y redondeado que explota a pantalla completa en scroll.*
+```js
+const clipAnimation = gsap.timeline({
+  scrollTrigger: {
+    trigger: '#clip',
+    start: 'center center',
+    end: '+=800 center',
+    scrub: 0.5,
+    pin: true,
+    pinSpacing: true,
+  },
+});
+clipAnimation.to('.mask-clip-path', {
+  width: '100vw',
+  height: '100vh',
+  borderRadius: 0,
+});
+```
+```css
+.mask-clip-path {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;    /* empieza como círculo */
+  overflow: hidden;
+  /* GSAP lo expande a 100vw × 100vh con borderRadius:0 */
+}
+```
+**Por qué funciona:** anima `width` + `height` + `borderRadius` simultáneamente.
+Diferente a clip-path — el elemento CRECE físicamente, no se recorta.
+Ideal para una sección que "revela" el contenido debajo como una apertura de iris.
+
+---
+
+### 3D tilt card — perspectiva en mousemove
+*BentoTilt de Zentry — sin GSAP, puro CSS transform calculado en JS.*
+```js
+function initTiltCards(selector) {
+  document.querySelectorAll(selector).forEach(el => {
+    el.addEventListener('mousemove', (e) => {
+      const r = el.getBoundingClientRect();
+      const relX = (e.clientX - r.left) / r.width  - 0.5; /* -0.5 → +0.5 */
+      const relY = (e.clientY - r.top)  / r.height - 0.5;
+      const tiltX = relY * -20;  /* positivo = inclina hacia arriba */
+      const tiltY = relX *  20;  /* positivo = inclina hacia la derecha */
+      el.style.transform = `perspective(700px) rotateX(${tiltX}deg) rotateY(${tiltY}deg) scale3d(.95,.95,.95)`;
+    });
+    el.addEventListener('mouseleave', () => {
+      gsap.to(el, { rotateX: 0, rotateY: 0, scale: 1, duration: 0.5, ease: 'power3.out', clearProps: 'transform' });
+    });
+  });
+}
+/* Llamar: initTiltCards('.card') */
+```
+**Diferencia vs nuestro magnetic:** magnetic desplaza X/Y. Tilt rota en 3D — efecto de profundidad.
+
+---
+
+### Radial gradient cursor tracker — glow interno en cards
+*Cursor que crea un "spotlight" dentro de la card al hacer hover.*
+```js
+document.querySelectorAll('.card').forEach(card => {
+  const btn = card.querySelector('.card__cta');
+  card.addEventListener('mousemove', (e) => {
+    const r = btn.getBoundingClientRect();
+    const x = e.clientX - r.left;
+    const y = e.clientY - r.top;
+    btn.style.background = `radial-gradient(100px circle at ${x}px ${y}px, rgba(101,111,226,0.53), rgba(0,0,0,0.15))`;
+  });
+  card.addEventListener('mouseleave', () => {
+    btn.style.background = '';
+  });
+});
+/* Adaptar con --accent: rgba(200,255,0,0.3) en lugar del purple de Zentry */
+```
+
+---
+
+### Dual video swap — transición cinematográfica entre videos
+```js
+/* nextVideo escala de 0 a fullscreen, currentVideo encoge a 0 */
+gsap.to('#next-video', {
+  transformOrigin: 'center center',
+  scale: 1, width: '100%', height: '100%',
+  duration: 1, ease: 'power1.inOut',
+  onStart: () => nextVideoEl.play(),
+});
+gsap.from('#current-video', {
+  transformOrigin: 'center center',
+  scale: 0,
+  duration: 1.5, ease: 'power1.inOut',
+});
+```
+**Cuándo usarlo:** hero con múltiples videos que transicionan al hacer click/scroll.
+Los dos videos están en el DOM simultáneamente — uno encoge mientras el otro crece.
+
+---
+
 ## 6. Repos benchmark de referencia
 
 | Repo | Stack | Técnicas clave | En benchmark/ |
 |---|---|---|---|
+| **adrianhajdin/award-winning-website** | **React+GSAP+Tailwind** | polygon clip-path morph, dual video swap, 3D tilt, radial gradient cursor, clip expand fullscreen | No — extraído aquí |
 | Truus.co (Thakuma07) | React+Next+GSAP+Lenis | quickTo cursor, proximity push, stacked cards | No (React) |
-| prashantkoirala465 | **Vanilla+GSAP+Lenis+Vite** | image cycling, card pinning, hardware accel | `prashantkoirala-portfolio/` |
+| prashantkoirala465 | **Vanilla+GSAP+Lenis+Vite** | image cycling, card pinning, self.progress math | `prashantkoirala-portfolio/` |
+| CRUE-CREATIVE (Chanirulk) | React+GSAP+Locomotive | fuentes editoriales, font presets → tokens.css | `crue-creative/` |
 | vanta | WebGL backgrounds | 14 efectos animados para hero | `vanta/` dist en vendors/ |
 | lottie-web | JSON animation player | Animaciones editables en After Effects | `lottie-web/` player en vendors/ |
 | ogl | WebGL minimal shaders | Custom shaders, 12KB compiled | `ogl/` solo referencia |
