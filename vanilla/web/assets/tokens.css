@@ -2,7 +2,18 @@
    DESIGN TOKENS — klipso_web vanilla
    Patrón: 3 capas (tinte pattern)
    Editar solo Layer 1 para cambiar el tema completo.
-   ───────────────────────────────────────────── */
+
+   TIPOGRAFÍA — cómo cambiar la fuente del sitio:
+   1. Elige un "preset" de la sección Typography más abajo
+   2. Activa el <link> de Google Fonts correspondiente en index.html
+   3. Cambia --font-body y/o --font-display aquí
+
+   Presets disponibles (extraídos de repos Awwwards nivel):
+   ─ System (default): system-ui — cero latencia, muy limpio
+   ─ Monda+Lora:  geométrica body + serif editorial headings (CRUE-CREATIVE)
+   ─ Space Grotesk: tech/startup moderno
+   ─ Playfair:    luxury editorial, mucho carácter
+   ─────────────────────────────────────────────── */
 
 /* ── Layer 1: Primitivos (valores crudos) ─── */
 :root {
@@ -33,6 +44,57 @@
   --mid:     var(--primitive-dark-800);
   --muted:   var(--primitive-mid-500);
   --border:  var(--primitive-border-subtle);
+}
+
+/* ── Layer 2b: Tipografía (swappable) ─── */
+:root {
+  /* ACTIVO: System UI — sin dependencias externas */
+  --font-body:    system-ui, -apple-system, sans-serif;
+  --font-display: system-ui, -apple-system, sans-serif;
+
+  /* ── Presets — descomentar el que quieras usar ── */
+
+  /* Preset: Monda + Lora (CRUE-CREATIVE / Awwwards agencia)
+     Activar en index.html:
+     <link href="https://fonts.googleapis.com/css2?family=Monda&family=Lora:wght@400;600;700&display=swap" rel="stylesheet">
+  --font-body:    "Monda", sans-serif;
+  --font-display: "Lora", Georgia, serif;
+  */
+
+  /* Preset: Space Grotesk (tech / startup / PM portfolio)
+     Activar en index.html:
+     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+  --font-body:    "Space Grotesk", sans-serif;
+  --font-display: "Space Grotesk", sans-serif;
+  */
+
+  /* Preset: Playfair Display (luxury editorial / agencia premium)
+     Activar en index.html:
+     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800;900&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+  --font-body:    "DM Sans", sans-serif;
+  --font-display: "Playfair Display", Georgia, serif;
+  */
+
+  /* Preset: Syne + Inter (Awwwards favorito 2024-2025)
+     Activar en index.html:
+     <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+  --font-body:    "Inter", sans-serif;
+  --font-display: "Syne", sans-serif;
+  */
+
+  /* Escala tipográfica (nivel Awwwards — line-heights generosos) */
+  --text-xs:   0.75rem;    /* 12px — labels, eyebrows */
+  --text-sm:   0.875rem;   /* 14px — captions */
+  --text-base: 1rem;       /* 16px — body */
+  --text-lg:   1.25rem;    /* 20px — body large */
+  --text-xl:   2rem;       /* 32px — subtítulos */
+  --text-2xl:  3rem;       /* 48px — headings */
+  --text-3xl:  4rem;       /* 64px — display */
+
+  --leading-tight:  0.92;  /* headings display — muy apretado, estilo editorial */
+  --leading-head:   1.7;   /* h1-h6 — estándar Awwwards (vs nuestro 1 actual) */
+  --leading-body:   1.65;  /* párrafos — cómodo */
+  --leading-loose:  2;     /* párrafos grandes — Awwwards / larga lectura */
 }
 
 /* ── Layer 3: Componentes (UI específica) ─── */

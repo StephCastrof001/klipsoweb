@@ -9,6 +9,7 @@ git clone --depth=1 https://github.com/tengbao/vanta vanta
 git clone --depth=1 https://github.com/airbnb/lottie-web lottie-web
 git clone --depth=1 https://github.com/oframe/ogl ogl
 git clone --depth=1 https://github.com/prashantkoirala465/web-development-portfolio prashantkoirala-portfolio
+git clone --depth=1 https://github.com/Chanirulk/Awwwards-remake-CRUE-CREATIVE crue-creative
 ```
 
 ## Qué extraemos de cada repo → `vanilla/web/assets/vendors/`
