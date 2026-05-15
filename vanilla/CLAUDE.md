@@ -15,16 +15,24 @@ Esta excepción aplica SOLO a:
 
 ---
 
+## Sistema de modelos
+
+Ver `MODELS.md` para la documentación completa.
+
+Para cambiar de modelo activo: editar `meta.model` + `meta.heroEffect` en `portfolio.js`.
+Modelos disponibles: M1 (activo) · M2 · M3 · M4 — ver tabla en `MODELS.md`.
+
 ## Archivos que Claude SÍ puede editar directamente
 
 | Archivo | Tipo |
 |---|---|
-| `web/data/portfolio.js` | Datos — array de proyectos |
-| `web/assets/framework.js` | Engine GSAP/Lenis (extraído de web/index.html) |
+| `web/data/portfolio.js` | Datos — array de proyectos + meta del modelo |
+| `web/assets/framework.js` | Engine GSAP/Lenis |
 | `web/assets/tokens.css` | Design tokens |
 | `web/assets/modern-css.css` | CSS catalog |
 | `web/index.html` | Template HTML |
 | `web/cases/*.html` | Casos de estudio |
+| `MODELS.md` | Configuración de modelos visuales |
 
 ## Archivos que Claude NO debe modificar
 

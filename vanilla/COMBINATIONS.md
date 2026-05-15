@@ -3,6 +3,90 @@
 Guía de referencia para el framework klipso_web vanilla.
 Leer antes de implementar cualquier animación nueva.
 
+> Sistema de modelos → ver `MODELS.md`
+
+---
+
+## 0. UX Fixes aplicados — M1 (Ronda 1)
+
+Patrones implementados en `framework.js` + `index.html` para pasar de 5/10 → 8/10 UX.
+
+### Scroll-aware navbar
+```javascript
+// framework.js — dentro de initAnimations(), después del nav slide-in
+ScrollTrigger.create({
+  start: 100,
+  onEnter:     () => gsap.to('#nav', { backgroundColor: 'rgba(8,8,8,0.92)', backdropFilter: 'blur(20px)', duration: 0.4 }),
+  onLeaveBack: () => gsap.to('#nav', { backgroundColor: 'transparent', backdropFilter: 'none', duration: 0.3 }),
+});
+```
+**Por qué:** `transition` CSS en `.nav` + GSAP maneja el trigger. Alternativa pura CSS con `@keyframes` no puede reaccionar a posición exacta de scroll.
+
+---
+
+### Panel dots indicator (horizontal scroll)
+```css
+/* index.html CSS */
+#featuresContainer { position: relative; }
+.features__dots { position:absolute; bottom:32px; left:50%; transform:translateX(-50%); display:flex; gap:10px; z-index:10; pointer-events:none; }
+.features__dot  { width:6px; height:6px; border-radius:50%; background:rgba(255,255,255,.18); transition:background .3s, transform .3s; }
+.features__dot.active { background:var(--accent); transform:scale(1.5); }
+```
+```html
+<!-- index.html — dentro de #featuresContainer, antes del track -->
+<div class="features__dots" aria-hidden="true">
+  <div class="features__dot active"></div>
+  <div class="features__dot"></div>
+  <div class="features__dot"></div>
+</div>
+```
+```javascript
+// framework.js — dentro del bloque horizontal scroll
+const dotsEl = document.querySelectorAll('.features__dot');
+if (dotsEl.length) {
+  ScrollTrigger.create({
+    trigger: featContainer, start: 'top top', end: () => '+=' + totalSlide, scrub: true,
+    onUpdate: (self) => {
+      const active = Math.round(self.progress * (panels.length - 1));
+      dotsEl.forEach((d, i) => d.classList.toggle('active', i === active));
+    }
+  });
+}
+```
+**Por qué:** `scrub:true` (sin número) en el segundo ScrollTrigger es más preciso que el `scrub:1.2` del scroll principal — responde instantáneamente al progress sin lag visual.
+
+---
+
+### Scroll hint animado
+```javascript
+// framework.js — debajo del parallax badge
+gsap.to('.hero__scroll-hint', { y: 7, duration: 0.9, ease: 'sine.inOut', repeat: -1, yoyo: true, delay: 2 });
+```
+```css
+/* index.html — cambiar color de var(--muted) a visible */
+.hero__scroll-hint { color: rgba(255,255,255,.5); }
+```
+**Por qué:** `sine.inOut` + `yoyo` = movimiento orgánico. `delay:2` → espera que el loader termine antes de arrancar.
+
+---
+
+### Card hover accent
+```css
+/* index.html CSS — agrega la línea lime superior */
+.card:hover { background: var(--mid); box-shadow: inset 0 2px 0 var(--accent); }
+```
+**Por qué:** `box-shadow` inset no afecta el layout (a diferencia de `border-top` que suma al box model y desplaza el grid).
+
+---
+
+### Bigtext reveal fix
+```javascript
+// framework.js — toggleActions corregido
+scrollTrigger: { trigger: line, start: 'top 88%', toggleActions: 'play none none none' }
+// Antes: 'play none none reverse' → causaba que el texto se ocultara al scrollear hacia arriba
+// 'top 88%': dispara más temprano (antes era 82%) para evitar que se vea cortado
+```
+
 ---
 
 ## 1. Regla fundamental: CSS vs GSAP
