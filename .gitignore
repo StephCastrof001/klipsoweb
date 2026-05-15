@@ -1,0 +1,28 @@
+# Repos clonados (embedded git repos — clonar manualmente)
+benchmark/vanta/
+benchmark/lottie-web/
+benchmark/ogl/
+gsap-skills-ref/
+ui-ux-pro-max-skill/
+
+# Node / tooling
+node_modules/
+.pnpm-store/
+dist/
+.cache/
+
+# Env & secrets
+.env
+.env.local
+.env.*.local
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editors
+.vscode/settings.json
+.idea/
+
+# gstack sessions (local tooling)
+.gstack/

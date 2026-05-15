@@ -1,0 +1,98 @@
+/* ─────────────────────────────────────────────
+   MODERN CSS CATALOG — klipso_web vanilla
+   Features CSS post-2023 (css-bash pattern)
+   Soporte: @layer 96%, container queries 94%,
+            color-mix() 92%, @property 91%
+   NO usar: anchor-positioning (72% — muy nuevo)
+   ───────────────────────────────────────────── */
+
+/* ── @layer: cascada con capas explícitas ─── */
+/* Prioridad: utilities > components > base    */
+@layer base, components, utilities;
+
+@layer base {
+  /* Reset y estilos base van aquí */
+}
+
+@layer components {
+  /* Estilos de UI reutilizables van aquí */
+}
+
+@layer utilities {
+  /* Overrides de una sola propiedad van aquí */
+  .text-accent  { color: var(--accent); }
+  .bg-mid       { background: var(--mid); }
+  .border-subtle { border: 1px solid var(--border); }
+}
+
+/* ── @property: variables CSS animables ──── */
+/* Permite animar custom properties con GSAP y CSS transitions */
+@property --gradient-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+@property --glow-opacity {
+  syntax: "<number>";
+  inherits: false;
+  initial-value: 0;
+}
+
+/* Ejemplo de uso: gradiente rotativo animable */
+.gradient-border {
+  background: conic-gradient(
+    from var(--gradient-angle),
+    var(--accent),
+    transparent 30%
+  );
+}
+
+/* ── color-mix(): mezclar colores en CSS puro ── */
+/* Elimina la necesidad de calcular hex manualmente */
+:root {
+  --accent-dim:    color-mix(in srgb, var(--accent) 30%, transparent);
+  --accent-subtle: color-mix(in srgb, var(--accent) 10%, transparent);
+  --accent-glow:   color-mix(in srgb, var(--accent) 20%, var(--bg));
+  --fg-muted:      color-mix(in srgb, var(--fg) 50%, transparent);
+}
+
+/* ── container queries: responsive por componente ── */
+/* No depende del viewport — el componente se adapta solo */
+.card-container {
+  container-type: inline-size;
+  container-name: card;
+}
+
+@container card (min-width: 400px) {
+  .card__title { font-size: clamp(18px, 3cqi, 28px); }
+}
+
+@container card (min-width: 600px) {
+  .card__meta { display: flex; gap: 12px; }
+}
+
+/* ── Scroll-driven animations (CSS puro, sin JS) ── */
+/* Animación ligada al scroll sin ScrollTrigger — complemento, no reemplazo */
+@supports (animation-timeline: scroll()) {
+  .scroll-fade {
+    animation: fade-in linear both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 30%;
+  }
+
+  @keyframes fade-in {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+}
+
+/* ── Nesting nativo (sin preprocesador) ── */
+/* Chrome 112+, Firefox 117+, Safari 16.5+ */
+.nav {
+  & a {
+    color: var(--muted);
+    &:hover { color: var(--fg); }
+    &:focus-visible { outline: 2px solid var(--accent); }
+  }
+}

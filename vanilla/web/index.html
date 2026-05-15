@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portfolio</title>
+
+  <link rel="stylesheet" href="assets/tokens.css">
+
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/ScrollTrigger.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/SplitText.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/ScrambleTextPlugin.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/DrawSVGPlugin.min.js"></script>
+  <script src="https://unpkg.com/lenis@1.1.14/dist/lenis.min.js"></script>
+  <script type="module" src="https://unpkg.com/@splinetool/viewer@1.9.58/build/spline-viewer.js"></script>
+
+  <style>
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    html { background:var(--bg); color:var(--fg); scroll-behavior:auto; }
+    body { font-family:system-ui,-apple-system,sans-serif; overflow-x:hidden; cursor:none; }
+    a { color:inherit; text-decoration:none; }
+    :focus-visible { outline:2px solid var(--accent); outline-offset:3px; border-radius:2px; }
+    @media (prefers-reduced-motion:reduce) { .grain { animation:none; } }
+
+    .grain {
+      position:fixed; inset:-100%; width:300%; height:300%;
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.78' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E");
+      opacity:.045; pointer-events:none; z-index:9999; animation:grain .7s steps(3) infinite;
+    }
+    @keyframes grain {
+      0%,100%{ transform:translate(0,0) } 20%{ transform:translate(-5%,-4%) }
+      40%{ transform:translate(4%,-5%) } 60%{ transform:translate(-4%,5%) } 80%{ transform:translate(5%,4%) }
+    }
+
+    .cursor { position:fixed; top:0; left:0; pointer-events:none; z-index:9998; }
+    .cursor__dot  { position:absolute; width:6px; height:6px; background:#fff; border-radius:50%; transform:translate(-50%,-50%); mix-blend-mode:difference; }
+    .cursor__ring { position:absolute; width:36px; height:36px; border:1px solid rgba(255,255,255,.4); border-radius:50%; transform:translate(-50%,-50%); transition:width .25s,height .25s,border-color .25s,opacity .2s; }
+    .cursor--hover .cursor__ring { width:56px; height:56px; border-color:var(--accent); }
+    .cursor--click .cursor__dot  { transform:translate(-50%,-50%) scale(2.5); }
+
+    .loader { position:fixed; inset:0; background:#060606; z-index:9997; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px; overflow:hidden; }
+    .loader__num { font-size:clamp(72px,14vw,160px); font-weight:800; letter-spacing:-.05em; line-height:1; font-variant-numeric:tabular-nums; }
+    .loader__sub { font-size:11px; letter-spacing:.3em; text-transform:uppercase; color:var(--muted); }
+    .loader__bar { position:absolute; bottom:0; left:0; height:2px; width:0%; background:var(--accent); }
+
+    .nav { position:fixed; top:0; left:0; right:0; z-index:100; display:flex; align-items:center; justify-content:space-between; padding:28px 48px; transform:translateY(-100%); }
+    .nav__logo { font-size:13px; font-weight:700; letter-spacing:.2em; text-transform:uppercase; }
+    .nav__links { display:flex; gap:40px; font-size:12px; letter-spacing:.06em; }
+    .nav__links a { color:var(--muted); transition:color .2s; }
+    .nav__links a:hover { color:var(--fg); }
+
+    .hero { min-height:100svh; display:flex; flex-direction:column; justify-content:flex-end; padding:0 48px 88px; position:relative; }
+    .hero__eyebrow { font-size:11px; letter-spacing:.3em; text-transform:uppercase; color:var(--muted); margin-bottom:40px; position:relative; z-index:1; }
+    .hero__title   { font-size:clamp(52px,9.5vw,148px); font-weight:800; line-height:.93; letter-spacing:-.04em; position:relative; z-index:1; }
+    .hero__sub     { font-size:clamp(15px,1.6vw,20px); color:var(--muted); max-width:380px; line-height:1.65; margin-top:56px; min-height:3.5em; position:relative; z-index:1; }
+    .hero__badge   { position:absolute; top:50%; right:48px; transform:translateY(-50%); width:120px; height:120px; border:1px solid var(--border); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:10px; letter-spacing:.15em; text-transform:uppercase; color:var(--muted); text-align:center; line-height:1.6; }
+    .hero__scroll-hint { position:absolute; bottom:40px; right:48px; font-size:10px; letter-spacing:.3em; text-transform:uppercase; color:var(--muted); writing-mode:vertical-rl; }
+    .hero__spline  { position:absolute; inset:0; z-index:0; pointer-events:none; background:radial-gradient(ellipse 55% 65% at 72% 50%, rgba(200,255,0,0.05) 0%, transparent 70%); }
+    .hero__spline spline-viewer { width:100%; height:100%; will-change:transform; }
+    @media (max-width:767px) { .hero__spline { display:none; } }
+
+    .marquee { border-top:1px solid var(--border); border-bottom:1px solid var(--border); padding:18px 0; overflow:hidden; background:var(--mid); }
+    .marquee__track { display:flex; gap:64px; width:max-content; }
+    .marquee__track span { font-size:12px; letter-spacing:.18em; text-transform:uppercase; color:var(--muted); flex-shrink:0; }
+    .marquee__track span.dot { color:var(--accent); }
+
+    .features__track { display:flex; will-change:transform; }
+    .panel { width:100vw; height:100vh; flex-shrink:0; display:flex; flex-direction:column; justify-content:flex-end; padding:80px 48px; border-right:1px solid var(--border); position:relative; }
+    .panel__count { font-size:11px; letter-spacing:.3em; color:var(--muted); margin-bottom:48px; display:block; }
+    .panel h2 { font-size:clamp(48px,7.5vw,112px); font-weight:800; line-height:.92; letter-spacing:-.04em; margin-bottom:32px; }
+    .panel p  { font-size:17px; color:var(--muted); max-width:300px; line-height:1.65; }
+    .panel__shape { position:absolute; right:48px; top:50%; transform:translateY(-50%); width:160px; height:160px; border:1px solid var(--border); opacity:.4; }
+    .panel__shape--circle  { border-radius:50%; }
+    .panel__shape--diamond { clip-path:polygon(50% 0%,100% 50%,50% 100%,0% 50%); }
+    .panel__shape--pill    { border-radius:100px; width:220px; height:80px; }
+    .panel__accent { color:var(--accent); }
+    .btn--panel { align-self:flex-start; margin-top:28px; display:inline-flex; align-items:center; gap:8px; padding:13px 32px; background:transparent; color:var(--fg); border:1px solid rgba(255,255,255,0.14); border-radius:100px; font-size:11px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; cursor:none; position:relative; overflow:hidden; will-change:transform; transition:border-color .25s,color .25s; }
+    .btn--panel:hover { border-color:var(--accent); color:var(--accent); }
+    .btn--panel .arrow { transition:transform .25s; }
+    .btn--panel:hover .arrow { transform:translateX(3px); }
+
+    .bigtext { padding:180px 48px; }
+    .bigtext__line { font-size:clamp(44px,8vw,120px); font-weight:800; line-height:1.05; letter-spacing:-.04em; clip-path:inset(0 100% 0 0); }
+
+    .draw { padding:120px 48px; display:flex; justify-content:center; }
+    .draw svg { width:100%; max-width:700px; overflow:visible; }
+
+    .cards { padding:120px 48px; }
+    .cards__header { margin-bottom:80px; }
+    .cards__eyebrow { font-size:11px; letter-spacing:.3em; text-transform:uppercase; color:var(--muted); margin-bottom:24px; }
+    .cards__title   { font-size:clamp(40px,5.5vw,80px); font-weight:800; letter-spacing:-.04em; line-height:1; }
+    .cards__grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:1px; background:var(--border); }
+    .card { background:var(--bg); padding:48px 40px; clip-path:inset(0 0 100% 0); transition:background .3s; cursor:none; position:relative; }
+    .card:hover { background:var(--mid); }
+    .card__num   { font-size:11px; letter-spacing:.2em; color:var(--muted); margin-bottom:40px; font-variant-numeric:tabular-nums; display:block; }
+    .card h3     { font-size:22px; font-weight:700; letter-spacing:-.02em; margin-bottom:14px; }
+    .card p      { font-size:14px; color:var(--muted); line-height:1.65; }
+    .card__tags  { display:flex; gap:6px; flex-wrap:wrap; margin-top:16px; }
+    .card__tag   { font-size:10px; letter-spacing:.08em; padding:3px 10px; border:1px solid var(--border); border-radius:20px; color:var(--muted); }
+    .card::after { content:'↗'; position:absolute; bottom:20px; right:20px; font-size:12px; color:var(--muted); opacity:0; transform:translate(-4px,4px); transition:opacity .25s,transform .25s; }
+    .card:hover::after { opacity:1; transform:translate(0,0); }
+
+    .cta { padding:160px 48px; display:flex; flex-direction:column; align-items:center; text-align:center; gap:72px; background:var(--mid); }
+    .cta__title { font-size:clamp(52px,8.5vw,130px); font-weight:800; letter-spacing:-.04em; line-height:.93; }
+    .btn { display:inline-flex; align-items:center; justify-content:center; padding:22px 56px; background:var(--accent); color:#000; font-size:13px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; border:none; border-radius:100px; cursor:none; position:relative; overflow:hidden; min-width:220px; min-height:64px; }
+    .btn__text { position:relative; z-index:1; display:block; }
+
+    .footer { padding:56px 48px; border-top:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; }
+    .footer__logo   { font-size:13px; font-weight:700; letter-spacing:.2em; text-transform:uppercase; }
+    .footer__copy   { font-size:12px; color:var(--muted); }
+    .footer__accent { color:var(--accent); }
+
+    .modal-overlay { position:fixed; inset:0; z-index:9990; display:flex; align-items:center; justify-content:center; background:rgba(8,8,8,0.82); backdrop-filter:blur(28px); -webkit-backdrop-filter:blur(28px); visibility:hidden; opacity:0; will-change:opacity; contain:layout style; }
+    .modal { background:rgba(14,14,14,0.92); border:1px solid rgba(255,255,255,0.08); border-radius:20px; padding:56px; max-width:640px; width:calc(100% - 48px); position:relative; overflow:hidden; will-change:transform,opacity; }
+    .modal::before { content:''; position:absolute; inset:0; background:linear-gradient(135deg,rgba(200,255,0,0.04) 0%,transparent 55%); pointer-events:none; }
+    .modal__close  { position:absolute; top:20px; right:20px; width:40px; height:40px; display:flex; align-items:center; justify-content:center; background:rgba(255,255,255,0.04); border:1px solid var(--border); border-radius:50%; font-size:14px; cursor:none; color:var(--muted); transition:color .2s,border-color .2s; }
+    .modal__close:hover { color:var(--fg); border-color:rgba(255,255,255,0.25); }
+    .modal__img    { width:100%; height:180px; background:linear-gradient(135deg,#111 0%,rgba(200,255,0,0.07) 100%); border-radius:10px; margin-bottom:28px; border:1px solid var(--border); display:flex; align-items:center; justify-content:center; font-size:11px; letter-spacing:.2em; text-transform:uppercase; color:var(--muted); overflow:hidden; }
+    .modal__img img { width:100%; height:100%; display:block; object-fit:cover; border-radius:8px; }
+    .modal__label  { font-size:11px; letter-spacing:.25em; text-transform:uppercase; color:var(--accent); margin-bottom:12px; }
+    .modal__title  { font-size:clamp(24px,3.5vw,40px); font-weight:800; letter-spacing:-.03em; line-height:1.05; margin-bottom:16px; }
+    .modal__text   { font-size:15px; color:var(--muted); line-height:1.7; }
+    .modal__cta    { display:inline-flex; align-items:center; gap:8px; margin-top:28px; padding:14px 32px; background:var(--accent); color:#000; font-size:12px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; border-radius:100px; text-decoration:none; transition:opacity .2s; }
+    .modal__cta:hover { opacity:.85; }
+    @media (max-width:767px) { .modal { padding:36px 24px; border-radius:16px; } .modal__title { font-size:26px; } }
+  </style>
+</head>
+<body>
+
+  <div class="grain" aria-hidden="true"></div>
+
+  <div class="cursor" aria-hidden="true">
+    <div class="cursor__dot" id="cursorDot"></div>
+    <div class="cursor__ring" id="cursorRing"></div>
+  </div>
+
+  <div class="loader" id="loader" aria-hidden="true">
+    <div class="loader__num" id="loaderNum">0</div>
+    <div class="loader__sub">Loading</div>
+    <div class="loader__bar" id="loaderBar"></div>
+  </div>
+
+  <nav class="nav" id="nav">
+    <div class="nav__logo" id="navLogo">Portfolio</div>
+    <div class="nav__links">
+      <a href="#work" class="mag-link">Work</a>
+      <a href="#contact" class="mag-link">Contact</a>
+    </div>
+  </nav>
+
+  <section class="hero">
+    <div class="hero__spline" aria-hidden="true">
+      <spline-viewer url="https://prod.spline.design/6Wq1Q7YGyM-iab9i/scene.splinecode" style="width:100%;height:100%;"></spline-viewer>
+    </div>
+    <div class="hero__eyebrow" id="heroEyebrow">Product · AI · LatAm</div>
+    <h1 class="hero__title" id="heroTitle">Work</h1>
+    <p class="hero__sub" id="heroSub"></p>
+    <div class="hero__badge" id="heroBadge">Product<br>Manager</div>
+    <div class="hero__scroll-hint">&#x2193; scroll</div>
+  </section>
+
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee__track" id="marqueeTrack">
+      <span>Product Strategy</span><span class="dot">&#x2726;</span>
+      <span>AI Builder</span><span class="dot">&#x2726;</span>
+      <span>LatAm</span><span class="dot">&#x2726;</span>
+      <span>Fintech</span><span class="dot">&#x2726;</span>
+      <span>Automation</span><span class="dot">&#x2726;</span>
+      <span>Open Banking</span><span class="dot">&#x2726;</span>
+      <span>Product Strategy</span><span class="dot">&#x2726;</span>
+      <span>AI Builder</span><span class="dot">&#x2726;</span>
+      <span>LatAm</span><span class="dot">&#x2726;</span>
+      <span>Fintech</span><span class="dot">&#x2726;</span>
+      <span>Automation</span><span class="dot">&#x2726;</span>
+      <span>Open Banking</span><span class="dot">&#x2726;</span>
+    </div>
+  </div>
+
+  <section id="features">
+    <div id="featuresContainer">
+      <div class="features__track" id="featuresTrack">
+        <div class="panel">
+          <span class="panel__count">01 &#x2014; 03</span>
+          <h2>AI<br>Products</h2>
+          <p>Bots, pipelines y CLIs que automatizan flujos reales con LLMs.</p>
+          <button class="btn--panel" data-magnetic data-modal-title="AI Products" data-modal-text="Construcción de productos con GPT-4o-mini, n8n y APIs de mensajería. Cada automatización ataca un flujo real con KPIs medibles desde el día 1.">
+            Ver enfoque <span class="arrow">&#x2192;</span>
+          </button>
+          <div class="panel__shape panel__shape--circle"></div>
+        </div>
+        <div class="panel">
+          <span class="panel__count panel__accent">02 &#x2014; 03</span>
+          <h2>Reverse<br>Engineering</h2>
+          <p>APIs bancarias y e-commerce desbloqueadas desde terminal.</p>
+          <button class="btn--panel" data-magnetic data-modal-title="Reverse Engineering" data-modal-text="Recon de APIs protegidas por WAF (Akamai, Cloudflare). Intercepción de tráfico mobile, análisis de fingerprinting y construcción de CLIs funcionales sin SDK oficial.">
+            Ver enfoque <span class="arrow">&#x2192;</span>
+          </button>
+          <div class="panel__shape panel__shape--diamond"></div>
+        </div>
+        <div class="panel">
+          <span class="panel__count">03 &#x2014; 03</span>
+          <h2>MCP<br>Servers</h2>
+          <p>Herramientas que Claude Code puede operar directamente.</p>
+          <button class="btn--panel" data-magnetic data-modal-title="MCP Servers" data-modal-text="Model Context Protocol: servidores que exponen APIs como herramientas nativas para Claude Code. Interbank, Plaza Vea y más — operables desde cualquier agente compatible.">
+            Ver enfoque <span class="arrow">&#x2192;</span>
+          </button>
+          <div class="panel__shape panel__shape--pill"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="bigtext">
+    <p class="bigtext__line" id="bigLine1">Data en decisiones.</p>
+    <p class="bigtext__line" id="bigLine2">Decisiones en productos.</p>
+    <p class="bigtext__line" style="color:var(--accent);" id="bigLine3">Productos en impacto.</p>
+  </section>
+
+  <div class="draw">
+    <svg viewBox="0 0 700 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path id="svgPath1" d="M 10 60 C 100 10, 200 110, 350 60 C 500 10, 600 110, 690 60" stroke="#c8ff00" stroke-width="1.5" stroke-linecap="round"/>
+      <path id="svgPath2" d="M 10 80 Q 350 20 690 80" stroke="rgba(255,255,255,0.12)" stroke-width="1" stroke-linecap="round"/>
+      <path id="svgPath3" d="M 10 40 Q 350 100 690 40" stroke="rgba(255,255,255,0.06)" stroke-width="1" stroke-linecap="round"/>
+    </svg>
+  </div>
+
+  <section class="cards" id="work">
+    <div class="cards__header">
+      <div class="cards__eyebrow">Casos de estudio</div>
+      <h2 class="cards__title" id="cardsTitle">Proyectos<br>reales</h2>
+    </div>
+    <div class="cards__grid" id="cardsGrid">
+      <!-- JS genera las cards desde portfolio.js -->
+    </div>
+  </section>
+
+  <section class="cta" id="contact">
+    <h2 class="cta__title" id="ctaTitle">Hablemos.</h2>
+    <a class="btn" id="ctaBtn" data-magnetic href="mailto:" id="ctaLink">
+      <span class="btn__text" id="ctaBtnText">Escribeme &#x2192;</span>
+    </a>
+  </section>
+
+  <footer class="footer">
+    <div class="footer__logo" id="footerLogo">Portfolio</div>
+    <div class="footer__copy">Hecho con <span class="footer__accent">GSAP</span> &#x26; caf&#xe9; &#x2014; 2026</div>
+  </footer>
+
+  <div class="modal-overlay" id="modalOverlay" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal" id="modal">
+      <button class="modal__close" id="modalClose" aria-label="Cerrar modal">&#x2715;</button>
+      <div class="modal__img" id="modalImg">Proyecto</div>
+      <p class="modal__label" id="modalLabel"></p>
+      <h2 class="modal__title" id="modalTitle"></h2>
+      <p class="modal__text" id="modalText"></p>
+      <!-- target="_blank" → abre en nueva pestaña, modal permanece abierto -->
+      <a class="modal__cta" id="modalCta" href="#" target="_blank" rel="noopener">
+        Ver caso completo &#x2192;
+      </a>
+    </div>
+  </div>
+
+  <!-- Data layer: lee portfolio.js y construye las cards via DOM seguro -->
+  <script type="module">
+    import { projects, meta } from './data/portfolio.js';
+
+    // Poblar meta en el DOM
+    if (meta.name) {
+      document.getElementById('navLogo').textContent   = meta.name;
+      document.getElementById('footerLogo').textContent = meta.name;
+    }
+    if (meta.role)     document.getElementById('heroEyebrow').textContent = meta.role;
+    if (meta.email)    document.getElementById('ctaBtn').href = 'mailto:' + meta.email;
+
+    // Tagline para ScrambleText (framework.js lo lee desde data-tagline)
+    const heroSub = document.getElementById('heroSub');
+    if (meta.tagline) heroSub.dataset.tagline = meta.tagline;
+
+    // Generar cards desde el array projects — DOM seguro, sin innerHTML
+    const grid = document.getElementById('cardsGrid');
+    projects.forEach(p => {
+      const card = document.createElement('article');
+      card.className = 'card';
+      card.setAttribute('tabindex', '0');
+      card.dataset.modalTitle = p.title;
+      card.dataset.modalText  = p.description;
+      card.dataset.modalImg   = p.img   || '';
+      card.dataset.modalLabel = p.label || '';
+      card.dataset.caseUrl    = p.caseUrl || '#';
+
+      const num = document.createElement('span');
+      num.className   = 'card__num';
+      num.textContent = p.id;
+
+      const title = document.createElement('h3');
+      title.textContent = p.title;
+
+      const desc = document.createElement('p');
+      desc.textContent = p.description;
+
+      const tagsEl = document.createElement('div');
+      tagsEl.className = 'card__tags';
+      (p.tags || []).forEach(t => {
+        const tag = document.createElement('span');
+        tag.className   = 'card__tag';
+        tag.textContent = t;
+        tagsEl.appendChild(tag);
+      });
+
+      card.appendChild(num);
+      card.appendChild(title);
+      card.appendChild(desc);
+      card.appendChild(tagsEl);
+      grid.appendChild(card);
+    });
+
+    // Exponer proyectos para el modal en framework.js
+    window.__klipsoProjects = projects;
+  </script>
+
+  <script src="assets/framework.js" defer></script>
+</body>
+</html>

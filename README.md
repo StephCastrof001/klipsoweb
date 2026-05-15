@@ -1,58 +1,102 @@
-# Oryzo-1
+# klipso_web
 
-Open weight 3D coaster model in OBJ format for rendering, simulation, and gloriously unnecessary research.
+Web engagement framework — páginas con elementos de alto impacto que los AI tools no generan.
 
-[![Video](thumb.png)](https://www.youtube.com/watch?v=uGJ9qh7DO-0)
-Intro: [Youtube](https://www.youtube.com/watch?v=uGJ9qh7DO-0) | Website: [oryzo.ai](https://oryzo.ai)
+---
 
-## Abstract
+## Antes de empezar: elige tu stack
 
-We present Oryzo-1, an open weight 3D model of a cork coaster for rendering, simulation, and gloriously unnecessary research. Oryzo-1 faithfully reproduces key coaster behaviors, including table protection, perfect circularity, and passive thermal moderation under everyday beverage conditions.
+Responde estas 4 preguntas y el resultado te dice qué carpeta usar.
 
-This repository contains the initial public release of the Oryzo-1 checkpoint family in clean OBJ format:
+### Pregunta 1 — ¿Cuántos proyectos vas a mostrar?
+- Menos de 15 → **vanilla/**
+- Más de 15 → **astro/**
 
-- `checkpoints/oryzo-1-26b-a0b.obj`
-- `checkpoints/oryzo-1-40b-a0b.obj`
-- `checkpoints/oryzo-1-108b-a0b.obj`
-- `checkpoints/oryzo-1-145b-a0b.obj`
-- `checkpoints/oryzo-1-168b-instruct-a0b.obj`
-- `checkpoints/oryzo-1-344b-a0b.obj`
+### Pregunta 2 — ¿Necesitas que Google te encuentre (SEO)?
+- No importa por ahora → **vanilla/**
+- Sí, quiero aparecer en búsquedas → **astro/**
 
-Baseline results were obtained on WoodenBench, a standardized evaluation suite conducted on a single desk and very possibly rigged by us. Limitations include heavy dependency on gravity, mugs, and human deployment.
+### Pregunta 3 — ¿Cómo prefieres editar el contenido?
+- Editando un archivo `.js` → **vanilla/**
+- Escribiendo en Markdown (`.mdx`) → **astro/**
 
-## Checkpoints
+### Pregunta 4 — ¿Tienes experiencia con build steps (npm install, npm run dev)?
+- No, prefiero abrir el HTML directo → **vanilla/**
+- Sí, sin problema → **astro/**
 
-| Model | Type |
+---
+
+## Resultado
+
+| Mayoría de respuestas | Usa esta carpeta |
 |---|---|
-| `oryzo-1-26b-a0b.obj` | Base |
-| `oryzo-1-40b-a0b.obj` | Base |
-| `oryzo-1-108b-a0b.obj` | Base |
-| `oryzo-1-145b-a0b.obj` | Base |
-| `oryzo-1-168b-instruct-a0b.obj` | Instruct |
-| `oryzo-1-344b-a0b.obj` | Frontier |
+| vanilla | → `vanilla/` — abre `vanilla/web/index.html` en el browser o `npx serve vanilla/web` |
+| astro | → `astro/` — sigue el `astro/README.md` para inicializar |
 
-## Acknowledgements
+> **Regla de oro:** Si tienes dudas, empieza con `vanilla/`.
+> Cuando el portafolio crezca a +15 proyectos o necesites SEO, migrar a `astro/` toma ~2 horas.
+> El `data/portfolio.js` de vanilla se convierte en archivos `.mdx` de Astro casi 1:1.
 
-This repository was single shot espresso'd into existence by the creative team at Lusion.
+---
 
-## Peer Review
+## ¿Qué tiene cada carpeta?
 
-> "Oryzo-1 A0B is the best model out there. Trust me bro." - Anonymous LocalLLaMA Reddit user
-
-## Citation
-
-If you find Oryzo-1 useful in your research, please cite:
-
-```bibtex
-@misc{oryzo2026,
-  title        = {Oryzo-1: Open-Weight Coaster Model},
-  author       = {Lusion},
-  year         = {2026},
-  howpublished = {OBJ release},
-  note         = {A high-fidelity 3D model of a cork coaster. Code: coming soon.
-}
+### `vanilla/` — Zero build step
+```
+vanilla/
+├── web/
+│   ├── index.html          ← portafolio principal (lee portfolio.js)
+│   ├── assets/
+│   │   ├── tokens.css      ← design tokens (colores, tipografía)
+│   │   ├── modern-css.css  ← features CSS post-2023 (css-bash pattern)
+│   │   └── framework.js    ← GSAP + Lenis + cursor + grain (no tocar)
+│   ├── data/
+│   │   └── portfolio.js    ← TUS proyectos (solo editar esto)
+│   └── cases/              ← páginas custom por proyecto
+└── README.md
 ```
 
-## License
+### `astro/` — Con build step, SEO, MDX
+```
+astro/
+├── src/
+│   ├── layouts/
+│   │   └── FrameworkLayout.astro  ← GSAP + Lenis base
+│   ├── content/
+│   │   └── projects/
+│   │       └── ejemplo.mdx        ← un archivo por proyecto
+│   └── pages/
+│       ├── index.astro            ← portafolio principal
+│       └── cases/[slug].astro     ← ruta dinámica por caso
+├── package.json
+└── README.md
+```
 
-MIT
+---
+
+## Estructura del repo completo
+
+```
+klipso_web/
+├── vanilla/            ← starter sin build step
+├── astro/              ← starter con Astro
+├── web/                ← versión de trabajo actual (monolítica)
+├── benchmark/          ← referencias e inspiración
+├── gsap-skills-ref/    ← skills GSAP (greensock/gsap-skills)
+├── ui-ux-pro-max-skill/← skills UX/UI (nextlevelbuilder)
+├── CLAUDE.md           ← contexto para Claude Code
+└── README.md           ← este archivo
+```
+
+---
+
+## Engine compartido (en ambas versiones)
+
+| Componente | Tecnología | Regla |
+|---|---|---|
+| Animaciones | GSAP 3 (CDN) — ScrollTrigger, SplitText, ScrambleText, DrawSVG | NUNCA modificar |
+| Smooth scroll | Lenis v1.1.14 | NUNCA modificar |
+| Custom cursor | JS vanilla + GSAP lerp | NUNCA modificar |
+| Grain texture | CSS SVG feTurbulence | NUNCA modificar |
+| Design tokens | CSS custom properties (3 capas) | Sí editar |
+| Datos | portfolio.js (vanilla) / .mdx (astro) | Sí editar |

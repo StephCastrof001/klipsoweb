@@ -1,0 +1,57 @@
+/* ─────────────────────────────────────────────
+   DESIGN TOKENS — klipso_web vanilla
+   Patrón: 3 capas (tinte pattern)
+   Editar solo Layer 1 para cambiar el tema completo.
+   ───────────────────────────────────────────── */
+
+/* ── Layer 1: Primitivos (valores crudos) ─── */
+:root {
+  /* Grises */
+  --primitive-dark-950: #080808;
+  --primitive-dark-900: #0a0a0a;
+  --primitive-dark-800: #111111;
+  --primitive-dark-700: #1a1a1a;
+  --primitive-mid-500:  #555555;
+
+  /* Luz */
+  --primitive-light-100: #f0ede6;
+  --primitive-white:     #ffffff;
+
+  /* Acento — cambia esto para rebrandear */
+  --primitive-accent:    #c8ff00;   /* lime */
+
+  /* Bordes */
+  --primitive-border-subtle: rgba(255, 255, 255, 0.07);
+  --primitive-border-modal:  rgba(255, 255, 255, 0.08);
+}
+
+/* ── Layer 2: Semánticos (qué significa cada color) ─── */
+:root {
+  --bg:      var(--primitive-dark-950);
+  --fg:      var(--primitive-light-100);
+  --accent:  var(--primitive-accent);
+  --mid:     var(--primitive-dark-800);
+  --muted:   var(--primitive-mid-500);
+  --border:  var(--primitive-border-subtle);
+}
+
+/* ── Layer 3: Componentes (UI específica) ─── */
+:root {
+  /* Modal */
+  --modal-bg:       rgba(14, 14, 14, 0.92);
+  --modal-border:   var(--primitive-border-modal);
+  --modal-blur:     28px;
+
+  /* Botones */
+  --btn-accent-bg:   var(--accent);
+  --btn-accent-text: #000000;
+  --btn-ghost-border: rgba(255, 255, 255, 0.15);
+
+  /* Cards */
+  --card-bg:    var(--primitive-dark-800);
+  --card-hover: var(--primitive-dark-700);
+
+  /* Loader */
+  --loader-bg:  #060606;
+  --loader-bar: var(--accent);
+}
