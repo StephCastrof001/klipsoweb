@@ -1,7 +1,8 @@
-# Repos clonados (embedded git repos — clonar manualmente)
+# Repos clonados (embedded git repos — clonar manualmente, ver benchmark/README.md)
 benchmark/vanta/
 benchmark/lottie-web/
 benchmark/ogl/
+benchmark/prashantkoirala-portfolio/
 gsap-skills-ref/
 ui-ux-pro-max-skill/
 
