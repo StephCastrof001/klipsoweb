@@ -13,6 +13,11 @@ git clone --depth=1 https://github.com/Chanirulk/Awwwards-remake-CRUE-CREATIVE c
 git clone --depth=1 https://github.com/robin-dela/hover-effect hover-effect
 git clone --depth=1 https://github.com/bedimcode/responsive-sidebar-submenu responsive-sidebar-submenu
 git clone --depth=1 https://github.com/priontoabdullah/CSS-NavBar-Effect css-navbar-effect
+
+# RAG Portfolio — referencia (NO clonar, estudiar online)
+# medevs/smart-portfolio     → Next.js + LangChain + Supabase pgvector
+# cameronobriendev/n8n-rag   → n8n + Neon pgvector + OpenAI (ruta recomendada)
+# neon.com/guides/rag-portfolio → FastAPI + pgvector (ruta Python)
 ```
 
 ## Qué extraemos de cada repo → `vanilla/web/assets/vendors/`
