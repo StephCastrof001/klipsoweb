@@ -37,7 +37,19 @@ export const projects = [
   }
 ];
 
+// ── MODELO ACTIVO ─────────────────────────────────────────────────────────
+// Cambia `model` para rotar entre configuraciones visuales completas.
+// Cada modelo define heroEffect + heroTitle + tagline + tipografía en tokens.css
+//
+// M1 — Vanta NET  : dark tech, red lime, sin fuentes externas
+// M2 — Spline 3D  : hero 3D interactivo, misma paleta
+// M3 — Fog luxury : heroEffect fog, fuente Playfair editorial
+// M4 — Gradient   : minimalista puro, cero WebGL, carga instantánea
+// ──────────────────────────────────────────────────────────────────────────
+
 export const meta = {
+  model:      "M1",        // identificador del modelo activo
+
   name: "Tu nombre",
   role: "Product Manager · AI Builder",
   tagline: "Productos que convierten data en decisiones.",

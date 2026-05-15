@@ -159,6 +159,13 @@ function runLoader(onDone) {
 function initAnimations() {
   gsap.to('#nav', { yPercent: 0, duration: 1, ease: 'power3.out' });
 
+  // Scroll-aware navbar: transparente → sólido al pasar 100px
+  ScrollTrigger.create({
+    start: 100,
+    onEnter:     () => gsap.to('#nav', { backgroundColor: 'rgba(8,8,8,0.92)', backdropFilter: 'blur(20px)', duration: 0.4 }),
+    onLeaveBack: () => gsap.to('#nav', { backgroundColor: 'transparent', backdropFilter: 'none', duration: 0.3 }),
+  });
+
   // Hero SplitText
   const heroTitle = document.getElementById('heroTitle');
   if (heroTitle) {
@@ -190,12 +197,23 @@ function initAnimations() {
       x: () => -totalSlide, ease: 'none',
       scrollTrigger: { trigger: featContainer, pin: true, start: 'top top', end: () => '+=' + totalSlide, scrub: 1.2, invalidateOnRefresh: true }
     });
+    // Dots en sync con el scroll horizontal
+    const dotsEl = document.querySelectorAll('.features__dot');
+    if (dotsEl.length) {
+      ScrollTrigger.create({
+        trigger: featContainer, start: 'top top', end: () => '+=' + totalSlide, scrub: true,
+        onUpdate: (self) => {
+          const active = Math.round(self.progress * (panels.length - 1));
+          dotsEl.forEach((d, i) => d.classList.toggle('active', i === active));
+        }
+      });
+    }
   }
 
   // BigText clip-path reveal
   document.querySelectorAll('.bigtext__line').forEach(line => {
     gsap.to(line, { clipPath: 'inset(0 0% 0 0)', duration: 1.2, ease: 'power3.out',
-      scrollTrigger: { trigger: line, start: 'top 82%', toggleActions: 'play none none reverse' }
+      scrollTrigger: { trigger: line, start: 'top 88%', toggleActions: 'play none none none' }
     });
   });
 
@@ -234,6 +252,9 @@ function initAnimations() {
   // Magnetic
   initMagnetic('[data-magnetic]', 0.45);
   initMagnetic('.mag-link', 0.3);
+
+  // Scroll hint — rebota suavemente para invitar al usuario a scrollear
+  gsap.to('.hero__scroll-hint', { y: 7, duration: 0.9, ease: 'sine.inOut', repeat: -1, yoyo: true, delay: 2 });
 
   // Parallax badge
   gsap.to('.hero__badge', { y: -60, ease: 'none',

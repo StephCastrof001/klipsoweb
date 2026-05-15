@@ -44,7 +44,7 @@
     .loader__sub { font-size:11px; letter-spacing:.3em; text-transform:uppercase; color:var(--muted); }
     .loader__bar { position:absolute; bottom:0; left:0; height:2px; width:0%; background:var(--accent); }
 
-    .nav { position:fixed; top:0; left:0; right:0; z-index:100; display:flex; align-items:center; justify-content:space-between; padding:28px 48px; transform:translateY(-100%); }
+    .nav { position:fixed; top:0; left:0; right:0; z-index:100; display:flex; align-items:center; justify-content:space-between; padding:28px 48px; transform:translateY(-100%); transition:background-color .4s, backdrop-filter .4s; }
     .nav__logo { font-size:13px; font-weight:700; letter-spacing:.2em; text-transform:uppercase; }
     .nav__links { display:flex; gap:40px; font-size:12px; letter-spacing:.06em; }
     .nav__links a { color:var(--muted); transition:color .2s; }
@@ -55,7 +55,7 @@
     .hero__title   { font-size:clamp(52px,9.5vw,148px); font-weight:800; line-height:.93; letter-spacing:-.04em; position:relative; z-index:1; }
     .hero__sub     { font-size:clamp(15px,1.6vw,20px); color:var(--muted); max-width:380px; line-height:1.65; margin-top:56px; min-height:3.5em; position:relative; z-index:1; }
     .hero__badge   { position:absolute; top:50%; right:48px; transform:translateY(-50%); width:120px; height:120px; border:1px solid var(--border); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:10px; letter-spacing:.15em; text-transform:uppercase; color:var(--muted); text-align:center; line-height:1.6; }
-    .hero__scroll-hint { position:absolute; bottom:40px; right:48px; font-size:10px; letter-spacing:.3em; text-transform:uppercase; color:var(--muted); writing-mode:vertical-rl; }
+    .hero__scroll-hint { position:absolute; bottom:40px; right:48px; font-size:10px; letter-spacing:.3em; text-transform:uppercase; color:rgba(255,255,255,.5); writing-mode:vertical-rl; }
     .hero__spline  { position:absolute; inset:0; z-index:0; pointer-events:none; background:radial-gradient(ellipse 55% 65% at 72% 50%, rgba(200,255,0,0.05) 0%, transparent 70%); }
     .hero__spline spline-viewer { width:100%; height:100%; will-change:transform; }
     .hero__spline canvas { width:100%!important; height:100%!important; }
@@ -66,7 +66,11 @@
     .marquee__track span { font-size:12px; letter-spacing:.18em; text-transform:uppercase; color:var(--muted); flex-shrink:0; }
     .marquee__track span.dot { color:var(--accent); }
 
+    #featuresContainer { position:relative; }
     .features__track { display:flex; will-change:transform; }
+    .features__dots { position:absolute; bottom:32px; left:50%; transform:translateX(-50%); display:flex; gap:10px; z-index:10; pointer-events:none; }
+    .features__dot  { width:6px; height:6px; border-radius:50%; background:rgba(255,255,255,.18); transition:background .3s,transform .3s; }
+    .features__dot.active { background:var(--accent); transform:scale(1.5); }
     .panel { width:100vw; height:100vh; flex-shrink:0; display:flex; flex-direction:column; justify-content:flex-end; padding:80px 48px; border-right:1px solid var(--border); position:relative; }
     .panel__count { font-size:11px; letter-spacing:.3em; color:var(--muted); margin-bottom:48px; display:block; }
     .panel h2 { font-size:clamp(48px,7.5vw,112px); font-weight:800; line-height:.92; letter-spacing:-.04em; margin-bottom:32px; }
@@ -93,7 +97,7 @@
     .cards__title   { font-size:clamp(40px,5.5vw,80px); font-weight:800; letter-spacing:-.04em; line-height:1; }
     .cards__grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:1px; background:var(--border); }
     .card { background:var(--bg); padding:48px 40px; clip-path:inset(0 0 100% 0); transition:background .3s; cursor:none; position:relative; }
-    .card:hover { background:var(--mid); }
+    .card:hover { background:var(--mid); box-shadow:inset 0 2px 0 var(--accent); }
     .card__num   { font-size:11px; letter-spacing:.2em; color:var(--muted); margin-bottom:40px; font-variant-numeric:tabular-nums; display:block; }
     .card h3     { font-size:22px; font-weight:700; letter-spacing:-.02em; margin-bottom:14px; }
     .card p      { font-size:14px; color:var(--muted); line-height:1.65; }
@@ -178,6 +182,11 @@
 
   <section id="features">
     <div id="featuresContainer">
+      <div class="features__dots" aria-hidden="true">
+        <div class="features__dot active"></div>
+        <div class="features__dot"></div>
+        <div class="features__dot"></div>
+      </div>
       <div class="features__track" id="featuresTrack">
         <div class="panel">
           <span class="panel__count">01 &#x2014; 03</span>
