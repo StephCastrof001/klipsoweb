@@ -10,6 +10,9 @@ git clone --depth=1 https://github.com/airbnb/lottie-web lottie-web
 git clone --depth=1 https://github.com/oframe/ogl ogl
 git clone --depth=1 https://github.com/prashantkoirala465/web-development-portfolio prashantkoirala-portfolio
 git clone --depth=1 https://github.com/Chanirulk/Awwwards-remake-CRUE-CREATIVE crue-creative
+git clone --depth=1 https://github.com/robin-dela/hover-effect hover-effect
+git clone --depth=1 https://github.com/bedimcode/responsive-sidebar-submenu responsive-sidebar-submenu
+git clone --depth=1 https://github.com/priontoabdullah/CSS-NavBar-Effect css-navbar-effect
 ```
 
 ## Qué extraemos de cada repo → `vanilla/web/assets/vendors/`
@@ -18,7 +21,10 @@ git clone --depth=1 https://github.com/Chanirulk/Awwwards-remake-CRUE-CREATIVE c
 |---|---|---|
 | vanta | `dist/vanta.net.min.js` · `vanta.rings.min.js` · `vanta.fog.min.js` | ~50KB c/u |
 | lottie-web | `build/player/lottie_light.min.js` | ~68KB |
+| hover-effect | `dist/hover-effect.umd.js` | 5KB |
 | ogl | Solo referencia — estudiar `src/` y `examples/` | — |
+| responsive-sidebar-submenu | Solo referencia — patrón hamburger + GSAP | — |
+| css-navbar-effect | Solo referencia — Amazing-NavBar, water, creative | — |
 
 ## Efectos Vanta disponibles
 

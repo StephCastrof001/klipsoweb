@@ -436,4 +436,107 @@ Los dos videos están en el DOM simultáneamente — uno encoge mientras el otro
 | CRUE-CREATIVE (Chanirulk) | React+GSAP+Locomotive | fuentes editoriales, font presets → tokens.css | `crue-creative/` |
 | vanta | WebGL backgrounds | 14 efectos animados para hero | `vanta/` dist en vendors/ |
 | lottie-web | JSON animation player | Animaciones editables en After Effects | `lottie-web/` player en vendors/ |
+| **robin-dela/hover-effect** | **Three.js WebGL** | Distorsión WebGL entre 2 imágenes en hover — nivel Awwwards | `hover-effect/` dist en vendors/ |
+| bedimcode/responsive-sidebar-submenu | Vanilla CSS/JS | Hamburger → sidebar slide + active states | `responsive-sidebar-submenu/` ref |
+| priontoabdullah/CSS-NavBar-Effect | CSS puro | Amazing-NavBar, water-effect, creative, typing | `css-navbar-effect/` ref |
+
+---
+
+## 7. Navegación — Patrones UX nivel Awwwards
+
+### Scroll-aware navbar (transparent → solid)
+```javascript
+ScrollTrigger.create({
+  start: 80,                             // px desde top
+  onEnter:  () => gsap.to('.nav', { backgroundColor: 'rgba(8,8,8,0.92)', backdropFilter: 'blur(20px)', duration: 0.4 }),
+  onLeaveBack: () => gsap.to('.nav', { backgroundColor: 'transparent', backdropFilter: 'blur(0px)', duration: 0.3 }),
+});
+```
+**Cuándo:** siempre en landing/portfolio. Sin esto el usuario pierde contexto al scrollear.
+
+---
+
+### Hamburger → fullscreen overlay (GSAP — no CSS sidebar)
+```html
+<button class="nav__hamburger" id="navHamburger" aria-label="Menú">
+  <span></span><span></span>
+</button>
+<div class="nav__overlay" id="navOverlay">
+  <nav class="nav__overlay-links">
+    <a href="#work">Work</a>
+    <a href="#contact">Contact</a>
+  </nav>
+</div>
+```
+```css
+.nav__overlay { position:fixed; inset:0; background:#080808; z-index:200; display:flex; align-items:center; justify-content:center; clip-path:circle(0% at calc(100% - 48px) 40px); }
+.nav__overlay-links a { font-size:clamp(40px,8vw,100px); font-weight:800; display:block; clip-path:inset(0 0 100% 0); }
+```
+```javascript
+const overlayOpen = gsap.timeline({ paused: true })
+  .to('#navOverlay',      { clipPath: 'circle(150% at calc(100% - 48px) 40px)', duration: 0.7, ease: 'power3.inOut' })
+  .to('.nav__overlay-links a', { clipPath: 'inset(0 0 0% 0)', stagger: 0.08, duration: 0.5, ease: 'power3.out' }, '-=0.3');
+
+document.getElementById('navHamburger').addEventListener('click', () => {
+  const isOpen = overlayOpen.progress() > 0;
+  isOpen ? overlayOpen.reverse() : overlayOpen.play();
+});
+```
+**Por qué clip-path circle:** el reveal en círculo desde el botón hamburger es el patrón más reconocido en Awwwards. Alternativa: `scaleY(0 → 1)` desde top.
+
+---
+
+### Panel dots indicator (horizontal scroll)
+```javascript
+const panels = document.querySelectorAll('.panel');
+const dots   = document.querySelectorAll('.features__dot');
+
+ScrollTrigger.create({
+  trigger: '#featuresContainer',
+  start: 'top top',
+  end: () => '+=' + (panels.length - 1) * window.innerWidth,
+  scrub: true,
+  onUpdate: (self) => {
+    const active = Math.round(self.progress * (panels.length - 1));
+    dots.forEach((d, i) => d.classList.toggle('active', i === active));
+  }
+});
+```
+```css
+.features__dots { position:absolute; bottom:32px; left:50%; transform:translateX(-50%); display:flex; gap:8px; }
+.features__dot  { width:6px; height:6px; border-radius:50%; background:var(--muted); transition:background .25s, transform .25s; }
+.features__dot.active { background:var(--accent); transform:scale(1.4); }
+```
+
+---
+
+### WebGL distorsión en hover de imágenes (robin-dela/hover-effect)
+```html
+<!-- Requiere Three.js ya cargado (lo tenemos cuando heroEffect es vanta-*) -->
+<script src="assets/vendors/hover-effect.umd.js"></script>
+
+<!-- Estructura HTML necesaria: contenedor con 2 imgs -->
+<div class="card__img-wrap" data-displacement="assets/img/displacement.jpg">
+  <img src="proyecto-a.jpg" alt="estado normal">
+  <img src="proyecto-b.jpg" alt="estado hover">
+</div>
+```
+```javascript
+document.querySelectorAll('.card__img-wrap').forEach(el => {
+  const [img1, img2] = el.querySelectorAll('img');
+  new hoverEffect({
+    parent:           el,
+    image1:           img1.src,
+    image2:           img2.src,
+    displacementImage: el.dataset.displacement,
+    intensity:        0.3,     // 0.1 (sutil) → 1.0 (extremo)
+    speedIn:          1.2,
+    speedOut:         0.8,
+    easing:           'power2.easeOut'
+  });
+});
+```
+**Cuándo:** cards de proyectos con 2 estados visuales (thumbnail normal + detalle).
+**Requiere:** imagen de displacement (mapa de distorsión — incluir en `assets/img/`).
+**Dependency chain:** `three.min.js` → `hover-effect.umd.js` → init (igual que Vanta).
 | ogl | WebGL minimal shaders | Custom shaders, 12KB compiled | `ogl/` solo referencia |
