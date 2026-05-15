@@ -13,7 +13,7 @@
   <script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/ScrambleTextPlugin.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/DrawSVGPlugin.min.js"></script>
   <script src="https://unpkg.com/lenis@1.1.14/dist/lenis.min.js"></script>
-  <script type="module" src="https://unpkg.com/@splinetool/viewer@1.9.58/build/spline-viewer.js"></script>
+  <!-- Spline viewer se carga dinámicamente si heroEffect:'spline' en portfolio.js -->
 
   <style>
     *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
@@ -58,6 +58,7 @@
     .hero__scroll-hint { position:absolute; bottom:40px; right:48px; font-size:10px; letter-spacing:.3em; text-transform:uppercase; color:var(--muted); writing-mode:vertical-rl; }
     .hero__spline  { position:absolute; inset:0; z-index:0; pointer-events:none; background:radial-gradient(ellipse 55% 65% at 72% 50%, rgba(200,255,0,0.05) 0%, transparent 70%); }
     .hero__spline spline-viewer { width:100%; height:100%; will-change:transform; }
+    .hero__spline canvas { width:100%!important; height:100%!important; }
     @media (max-width:767px) { .hero__spline { display:none; } }
 
     .marquee { border-top:1px solid var(--border); border-bottom:1px solid var(--border); padding:18px 0; overflow:hidden; background:var(--mid); }
@@ -150,9 +151,7 @@
   </nav>
 
   <section class="hero">
-    <div class="hero__spline" aria-hidden="true">
-      <spline-viewer url="https://prod.spline.design/6Wq1Q7YGyM-iab9i/scene.splinecode" style="width:100%;height:100%;"></spline-viewer>
-    </div>
+    <div class="hero__spline" id="heroEffectMount" aria-hidden="true"></div>
     <div class="hero__eyebrow" id="heroEyebrow">Product · AI · LatAm</div>
     <h1 class="hero__title" id="heroTitle">Work</h1>
     <p class="hero__sub" id="heroSub"></p>
@@ -267,15 +266,49 @@
 
     // Poblar meta en el DOM
     if (meta.name) {
-      document.getElementById('navLogo').textContent   = meta.name;
+      document.getElementById('navLogo').textContent    = meta.name;
       document.getElementById('footerLogo').textContent = meta.name;
     }
-    if (meta.role)     document.getElementById('heroEyebrow').textContent = meta.role;
-    if (meta.email)    document.getElementById('ctaBtn').href = 'mailto:' + meta.email;
+    if (meta.role)      document.getElementById('heroEyebrow').textContent = meta.role;
+    if (meta.heroTitle) document.getElementById('heroTitle').textContent   = meta.heroTitle;
+    if (meta.email)     document.getElementById('ctaBtn').href = 'mailto:' + meta.email;
 
     // Tagline para ScrambleText (framework.js lo lee desde data-tagline)
     const heroSub = document.getElementById('heroSub');
     if (meta.tagline) heroSub.dataset.tagline = meta.tagline;
+
+    // ── heroEffect ──────────────────────────────────────────────────────
+    // Cambiar meta.heroEffect en portfolio.js para alternar el visual del hero.
+    // Opciones: 'spline' | 'vanta-net' | 'vanta-rings' | 'vanta-fog' | 'gradient'
+    const mount  = document.getElementById('heroEffectMount');
+    const effect = meta.heroEffect || 'gradient';
+
+    if (effect === 'spline') {
+      await import('https://unpkg.com/@splinetool/viewer@1.9.58/build/spline-viewer.js');
+      const viewer = document.createElement('spline-viewer');
+      viewer.setAttribute('url', 'https://prod.spline.design/6Wq1Q7YGyM-iab9i/scene.splinecode');
+      viewer.style.cssText = 'width:100%;height:100%;';
+      mount.appendChild(viewer);
+
+    } else if (effect.startsWith('vanta-')) {
+      const name  = effect.slice(6).toUpperCase(); // 'NET' | 'FOG' | 'RINGS'
+      const files = { NET: 'vanta.net.min.js', FOG: 'vanta.fog.min.js', RINGS: 'vanta.rings.min.js' };
+      const load  = src => new Promise((ok, fail) => {
+        const s = document.createElement('script'); s.src = src;
+        s.onload = ok; s.onerror = fail; document.head.appendChild(s);
+      });
+      await load('https://cdn.jsdelivr.net/npm/three@0.134/build/three.min.js');
+      await load('./assets/vendors/' + files[name]);
+      const base = { el: mount, mouseControls: true, touchControls: true, gyroControls: false };
+      const opts = {
+        NET:   { ...base, color: 0xc8ff00, backgroundColor: 0x080808, points: 9, maxDistance: 22 },
+        FOG:   { ...base, highlightColor: 0x4dff00, midtoneColor: 0x1a1a1a, lowlightColor: 0x080808, baseColor: 0x0a0a0a, blurFactor: 0.6 },
+        RINGS: { ...base, color: 0xc8ff00, backgroundColor: 0x080808 },
+      };
+      window.VANTA[name](opts[name]);
+    }
+    // 'gradient' → el background CSS en .hero__spline ya lo cubre, sin JS adicional
+    // ────────────────────────────────────────────────────────────────────
 
     // Generar cards desde el array projects — DOM seguro, sin innerHTML
     const grid = document.getElementById('cardsGrid');

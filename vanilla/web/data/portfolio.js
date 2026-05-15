@@ -41,6 +41,8 @@ export const meta = {
   name: "Tu nombre",
   role: "Product Manager · AI Builder",
   tagline: "Productos que convierten data en decisiones.",
+  heroTitle:  "Portfolio.",
+  heroEffect: "spline",   // 'spline' | 'vanta-net' | 'vanta-rings' | 'vanta-fog' | 'gradient'
   location: "Lima, Perú",
   email: "",
   linkedin: "",
