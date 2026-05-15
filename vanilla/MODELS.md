@@ -152,6 +152,27 @@ heroTitle:  "Hola."
 
 ---
 
+## Lecciones de referencia — elenacalvillo.com (score 8.4/10)
+
+Evaluación completa en `benchmark/EVALUATIONS.md`.
+
+**Lo que hace Elena que nosotros no:** muestra artefactos reales de trabajo —
+RAG flow en producción, roadmap visual, build stack, evolution timeline.
+No describe su trabajo, lo *demuestra*. Score de contenido: 10/10.
+
+**Lo que nosotros hacemos que Elena no:** WebGL, animaciones, cursor magnético,
+SplitText reveals, scroll horizontal. Score de impacto visual: 6/10 → nosotros 7.2/10.
+
+**Portfolio ideal = narrativa Elena + efectos M1.**
+
+### Gap crítico antes de cualquier nuevo modelo
+Rellenar `portfolio.js` con contenido real:
+- Proyectos con métricas concretas (no "Proyecto 1")
+- Una sección "Proof of Work" con artefactos visuales reales
+- Foto real en el hero (humaniza más que cualquier WebGL)
+
+---
+
 ## Agregar un modelo nuevo
 
 1. Elegir un `heroEffect` de la lista disponible
