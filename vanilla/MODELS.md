@@ -23,16 +23,73 @@ Para cambiar de modelo: editar `model`, `heroEffect`, y activar el preset de tip
 
 ## Tabla de modelos
 
-| ID | Nombre | heroEffect | Tipografía | Estado |
-|---|---|---|---|---|
-| **M1** | Dark Tech | `vanta-net` | System UI | ✅ Activo |
-| M2 | Spline 3D | `spline` | System UI | 🔲 Pendiente |
-| M3 | Fog Luxury | `vanta-fog` | Playfair Display + DM Sans | 🔲 Pendiente |
-| M4 | Minimal | `gradient` | Space Grotesk | 🔲 Pendiente |
+| ID | Nombre | heroEffect | Estructura | Paleta | Estado |
+|---|---|---|---|---|---|
+| **M1-Bento** | Warm Bento | `vanta-net` | Split hero + Bento 2×2 + Metrics | Warm Amber `#f59e0b` | ✅ **Activo** |
+| M1-Legacy | Dark Tech | `vanta-net` | Hero full + Horizontal scroll | Lime `#c8ff00` | 📦 Archivado (commit `87f33ca`) |
+| M2 | Spline 3D | `spline` | Split hero + Bento | TBD | 🔲 Pendiente |
+| M3 | Fog Luxury | `vanta-fog` | Split hero + Bento | Playfair Display | 🔲 Pendiente |
+| M4 | Minimal | `gradient` | Split hero + Bento | Space Grotesk | 🔲 Pendiente |
+| M5 | Terminal CLI | `terminal` | Shell full viewport | Monospace | 🔲 Pendiente |
+| M6 | Glitch / RE | `glitch` | Split hero + Bento | Chromatic | 🔲 Pendiente |
 
 ---
 
-## M1 — Dark Tech (activo)
+## M1-Bento — Warm Bento (activo)
+
+**Filosofía:** La estructura correcta para un portfolio PM técnico. Split hero separa el WebGL del contenido — el usuario lee sin que el efecto compita. Bento reemplaza el horizontal scroll: toda la propuesta de valor visible sin mecánicas de navegación custom. Metrics strip crea credibilidad inmediata con números reales.
+
+### Estructura
+
+```
+Hero split (WebGL izq / texto der)
+  → Marquee skills
+  → Bento 2×2 (AI Products large / RE + MCP)
+  → Metrics strip (23 · 4 · 3 · 1)
+  → Cards grid (proyectos)
+  → Clients logos
+  → CTA
+  → Footer
+```
+
+### Paleta activa
+
+```css
+--bg:     #0c0a06;   /* warm dark */
+--accent: #f59e0b;   /* amber */
+--fg:     #f5efe4;   /* warm white */
+--muted:  #6b5d47;   /* warm gray */
+```
+
+### Paletas alternativas disponibles (solo cambiar tokens.css Layer 1)
+
+| Paleta | bg | accent | Feel |
+|---|---|---|---|
+| **Warm Amber** (activa) | `#0c0a06` | `#f59e0b` | Terminal + oro |
+| Dark Lime (legacy) | `#080808` | `#c8ff00` | Developer tech |
+| Deep Navy | `#080e14` | `#4f9eff` | SaaS premium |
+| Purple Haze | `#0a0812` | `#9b5de5` | AI-forward |
+
+### Gaps a resolver (evaluación post-implementación)
+
+| Gap | Impacto | Dificultad |
+|---|---|---|
+| **Paleta definitiva** — ¿amber o cambiar? | Alto | Muy baja — 1 línea tokens.css |
+| **Hero visual izq** — lado izquierdo siente vacío sin contenido propio | Alto | Media — agregar elemento visual (número grande, foto, shape animado) |
+| **Bento hover** — transición de background muy sutil | Medio | Baja |
+| **Contenido real** — métricas reales, proyectos reales | Crítico | No es código — es redacción |
+| **Foto real** en hero visual | Alto — humaniza | Muy baja — cambiar CSS |
+| **Mobile** — bento 2 col colapsa bien, hero split colapsa a 1 col | Revisar | Baja |
+
+### El insight de estructura
+
+> El horizontal scroll era una trampa de UX: el usuario tenía que descubrir
+> que podía scrollear horizontalmente. El bento muestra las 3 áreas de una vez.
+> El split hero le da al WebGL su propio espacio sin invadir la lectura del título.
+
+---
+
+## M1-Legacy — Dark Tech (archivado)
 
 **Filosofía:** Portfolio PM técnico. WebGL discreto, paleta lime + negro, sin fuentes externas.
 
