@@ -17,23 +17,23 @@
 
 /* ── Layer 1: Primitivos (valores crudos) ─── */
 :root {
-  /* Grises */
-  --primitive-dark-950: #080808;
-  --primitive-dark-900: #0a0a0a;
-  --primitive-dark-800: #111111;
-  --primitive-dark-700: #1a1a1a;
-  --primitive-mid-500:  #555555;
+  /* Warm dark — negro con temperatura cálida */
+  --primitive-dark-950: #0c0a06;
+  --primitive-dark-900: #100d08;
+  --primitive-dark-800: #17130d;
+  --primitive-dark-700: #211a10;
+  --primitive-mid-500:  #6b5d47;
 
-  /* Luz */
-  --primitive-light-100: #f0ede6;
+  /* Luz cálida */
+  --primitive-light-100: #f5efe4;
   --primitive-white:     #ffffff;
 
-  /* Acento — cambia esto para rebrandear */
-  --primitive-accent:    #c8ff00;   /* lime */
+  /* Acento — Warm Amber */
+  --primitive-accent:    #f59e0b;
 
-  /* Bordes */
-  --primitive-border-subtle: rgba(255, 255, 255, 0.07);
-  --primitive-border-modal:  rgba(255, 255, 255, 0.08);
+  /* Bordes tintados amber */
+  --primitive-border-subtle: rgba(245, 158, 11, 0.10);
+  --primitive-border-modal:  rgba(245, 158, 11, 0.12);
 }
 
 /* ── Layer 2: Semánticos (qué significa cada color) ─── */
@@ -114,6 +114,6 @@
   --card-hover: var(--primitive-dark-700);
 
   /* Loader */
-  --loader-bg:  #060606;
+  --loader-bg:  #080601;
   --loader-bar: var(--accent);
 }

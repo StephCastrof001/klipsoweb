@@ -187,41 +187,24 @@ function initAnimations() {
   const track = document.getElementById('marqueeTrack');
   if (track) gsap.to(track, { x: -(track.scrollWidth / 2), duration: 28, ease: 'none', repeat: -1 });
 
-  // Horizontal scroll
-  const featContainer = document.getElementById('featuresContainer');
-  const featTrack     = document.getElementById('featuresTrack');
-  const panels        = document.querySelectorAll('.panel');
-  if (featContainer && panels.length) {
-    const totalSlide = (panels.length - 1) * window.innerWidth;
-    gsap.to(featTrack, {
-      x: () => -totalSlide, ease: 'none',
-      scrollTrigger: { trigger: featContainer, pin: true, start: 'top top', end: () => '+=' + totalSlide, scrub: 1.2, invalidateOnRefresh: true }
-    });
-    // Dots en sync con el scroll horizontal
-    const dotsEl = document.querySelectorAll('.features__dot');
-    if (dotsEl.length) {
-      ScrollTrigger.create({
-        trigger: featContainer, start: 'top top', end: () => '+=' + totalSlide, scrub: true,
-        onUpdate: (self) => {
-          const active = Math.round(self.progress * (panels.length - 1));
-          dotsEl.forEach((d, i) => d.classList.toggle('active', i === active));
-        }
-      });
-    }
-  }
-
-  // BigText clip-path reveal
-  document.querySelectorAll('.bigtext__line').forEach(line => {
-    gsap.to(line, { clipPath: 'inset(0 0% 0 0)', duration: 1.2, ease: 'power3.out',
-      scrollTrigger: { trigger: line, start: 'top 88%', toggleActions: 'play none none none' }
+  // Bento grid — reveal items on scroll
+  gsap.utils.toArray('.bento__item').forEach((item, i) => {
+    gsap.from(item, {
+      opacity: 0, y: 40, duration: 0.9, ease: 'power3.out', delay: i * 0.08,
+      scrollTrigger: { trigger: '.bento', start: 'top 80%', toggleActions: 'play none none none' }
     });
   });
 
-  // DrawSVG
-  const drawTrigger = { trigger: '.draw', start: 'top 78%' };
-  gsap.from('#svgPath1', { drawSVG: '0%', duration: 2.2, ease: 'power2.out', scrollTrigger: drawTrigger });
-  gsap.from('#svgPath2', { drawSVG: '0%', duration: 1.6, ease: 'power2.out', delay: 0.4, scrollTrigger: drawTrigger });
-  gsap.from('#svgPath3', { drawSVG: '0%', duration: 1.6, ease: 'power2.out', delay: 0.8, scrollTrigger: drawTrigger });
+  // Metrics counter animation
+  document.querySelectorAll('.metric__num[data-target]').forEach(el => {
+    const target = parseInt(el.dataset.target, 10);
+    const obj = { v: 0 };
+    gsap.to(obj, {
+      v: target, duration: 1.6, ease: 'power2.out',
+      onUpdate() { el.textContent = Math.round(obj.v); },
+      scrollTrigger: { trigger: '.metrics', start: 'top 82%', toggleActions: 'play none none none' }
+    });
+  });
 
   // Cards batch reveal
   gsap.set('.card', { clipPath: 'inset(0 0 100% 0)' });
@@ -248,6 +231,60 @@ function initAnimations() {
       gsap.to(ctaText, { duration: 0.9, scrambleText: { text: 'Escribeme →', chars: '01!@#', speed: 1 } });
     });
   }
+
+  // Rotating badge — cycles roles con ScrambleText
+  const badge = document.getElementById('heroBadge');
+  if (badge) {
+    const roles = ['PM Técnico', 'AI Builder', 'RE · APIs', 'n8n Arch', 'MCP Dev'];
+    let ri = 0;
+    badge.textContent = roles[0];
+    setInterval(() => {
+      ri = (ri + 1) % roles.length;
+      gsap.to(badge, { duration: 0.7, scrambleText: { text: roles[ri], chars: 'ABCDEF01!@#', speed: 0.6 } });
+    }, 2600);
+  }
+
+  // ScrambleText en nav links al hover
+  document.querySelectorAll('.mag-link').forEach(link => {
+    const original = link.textContent;
+    link.addEventListener('mouseenter', () => {
+      gsap.to(link, { duration: 0.45, scrambleText: { text: original, chars: '01ABCDEF', speed: 1 } });
+    });
+  });
+
+  // 3D card tilt — perspectiva al mover mouse
+  document.querySelectorAll('.card').forEach(card => {
+    card.style.transformStyle = 'preserve-3d';
+    card.addEventListener('mousemove', (e) => {
+      const { left, top, width, height } = card.getBoundingClientRect();
+      const rx = ((e.clientY - top)  / height - 0.5) * 10;
+      const ry = ((e.clientX - left) / width  - 0.5) * -10;
+      gsap.to(card, { rotateX: rx, rotateY: ry, duration: 0.25, ease: 'power2.out', transformPerspective: 900 });
+    });
+    card.addEventListener('mouseleave', () => {
+      gsap.to(card, { rotateX: 0, rotateY: 0, duration: 0.9, ease: 'elastic.out(1,0.35)' });
+    });
+  });
+
+  // Spotlight glow en hero — sigue al mouse con radial-gradient
+  const heroEl = document.querySelector('.hero');
+  const spotEl = document.getElementById('heroSpotlight');
+  if (heroEl && spotEl) {
+    heroEl.addEventListener('mousemove', (e) => {
+      const r = heroEl.getBoundingClientRect();
+      const x = ((e.clientX - r.left) / r.width)  * 100;
+      const y = ((e.clientY - r.top)  / r.height) * 100;
+      spotEl.style.background = `radial-gradient(circle 520px at ${x}% ${y}%, rgba(200,255,0,0.07) 0%, transparent 65%)`;
+    });
+    heroEl.addEventListener('mouseleave', () => { spotEl.style.background = ''; });
+  }
+
+  // Clients logos reveal
+  gsap.set('.clients__logo', { opacity: 0, y: 18 });
+  ScrollTrigger.batch('.clients__logo', {
+    onEnter: (batch) => gsap.to(batch, { opacity: 1, y: 0, stagger: 0.1, duration: 0.8, ease: 'power3.out' }),
+    start: 'top 88%'
+  });
 
   // Magnetic
   initMagnetic('[data-magnetic]', 0.45);

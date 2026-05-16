@@ -50,46 +50,57 @@
     .nav__links a { color:var(--muted); transition:color .2s; }
     .nav__links a:hover { color:var(--fg); }
 
-    .hero { min-height:100svh; display:flex; flex-direction:column; justify-content:flex-end; padding:0 48px 88px; position:relative; }
-    .hero__eyebrow { font-size:11px; letter-spacing:.3em; text-transform:uppercase; color:var(--muted); margin-bottom:40px; position:relative; z-index:1; }
-    .hero__title   { font-size:clamp(52px,9.5vw,148px); font-weight:800; line-height:.93; letter-spacing:-.04em; position:relative; z-index:1; }
-    .hero__sub     { font-size:clamp(15px,1.6vw,20px); color:var(--muted); max-width:380px; line-height:1.65; margin-top:56px; min-height:3.5em; position:relative; z-index:1; }
-    .hero__badge   { position:absolute; top:50%; right:48px; transform:translateY(-50%); width:120px; height:120px; border:1px solid var(--border); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:10px; letter-spacing:.15em; text-transform:uppercase; color:var(--muted); text-align:center; line-height:1.6; }
-    .hero__scroll-hint { position:absolute; bottom:40px; right:48px; font-size:10px; letter-spacing:.3em; text-transform:uppercase; color:rgba(255,255,255,.5); writing-mode:vertical-rl; }
-    .hero__spline  { position:absolute; inset:0; z-index:0; pointer-events:none; background:radial-gradient(ellipse 55% 65% at 72% 50%, rgba(200,255,0,0.05) 0%, transparent 70%); }
+    /* HERO — split: visual left / text right */
+    .hero { min-height:100svh; display:grid; grid-template-columns:1fr 1fr; position:relative; overflow:hidden; }
+    .hero__visual { grid-column:1; grid-row:1; position:relative; }
+    .hero__content { grid-column:2; grid-row:1; display:flex; flex-direction:column; justify-content:flex-end; padding:0 56px 88px; position:relative; z-index:2; }
+    .hero__eyebrow { font-size:11px; letter-spacing:.3em; text-transform:uppercase; color:var(--muted); margin-bottom:32px; }
+    .hero__title   { font-size:clamp(48px,7.5vw,120px); font-weight:800; line-height:.93; letter-spacing:-.04em; }
+    .hero__sub     { font-size:clamp(14px,1.4vw,18px); color:var(--muted); max-width:340px; line-height:1.65; margin-top:40px; min-height:3em; }
+    .hero__scroll-hint { position:absolute; bottom:40px; right:56px; font-size:10px; letter-spacing:.3em; text-transform:uppercase; color:rgba(255,255,255,.35); writing-mode:vertical-rl; }
+    /* Badge reposicionado — bottom-left del visual */
+    .hero__badge   { position:absolute; bottom:48px; left:48px; z-index:3; width:110px; height:110px; border:1px solid var(--border); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:9px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); text-align:center; line-height:1.5; }
+    .hero__spline  { position:absolute; inset:0; z-index:0; pointer-events:none; background:radial-gradient(ellipse 80% 80% at 40% 50%, rgba(245,158,11,0.06) 0%, transparent 70%); }
+    #heroSpotlight { position:absolute; inset:0; z-index:1; pointer-events:none; }
     .hero__spline spline-viewer { width:100%; height:100%; will-change:transform; }
     .hero__spline canvas { width:100%!important; height:100%!important; }
-    @media (max-width:767px) { .hero__spline { display:none; } }
+    /* Línea divisora vertical entre visual y content */
+    .hero__divider { position:absolute; left:50%; top:15%; bottom:15%; width:1px; background:var(--border); z-index:2; }
+    @media (max-width:767px) {
+      .hero { grid-template-columns:1fr; }
+      .hero__visual { display:none; }
+      .hero__content { grid-column:1; padding:120px 24px 80px; }
+    }
 
     .marquee { border-top:1px solid var(--border); border-bottom:1px solid var(--border); padding:18px 0; overflow:hidden; background:var(--mid); }
     .marquee__track { display:flex; gap:64px; width:max-content; }
     .marquee__track span { font-size:12px; letter-spacing:.18em; text-transform:uppercase; color:var(--muted); flex-shrink:0; }
     .marquee__track span.dot { color:var(--accent); }
 
-    #featuresContainer { position:relative; }
-    .features__track { display:flex; will-change:transform; }
-    .features__dots { position:absolute; bottom:32px; left:50%; transform:translateX(-50%); display:flex; gap:10px; z-index:10; pointer-events:none; }
-    .features__dot  { width:6px; height:6px; border-radius:50%; background:rgba(255,255,255,.18); transition:background .3s,transform .3s; }
-    .features__dot.active { background:var(--accent); transform:scale(1.5); }
-    .panel { width:100vw; height:100vh; flex-shrink:0; display:flex; flex-direction:column; justify-content:flex-end; padding:80px 48px; border-right:1px solid var(--border); position:relative; }
-    .panel__count { font-size:11px; letter-spacing:.3em; color:var(--muted); margin-bottom:48px; display:block; }
-    .panel h2 { font-size:clamp(48px,7.5vw,112px); font-weight:800; line-height:.92; letter-spacing:-.04em; margin-bottom:32px; }
-    .panel p  { font-size:17px; color:var(--muted); max-width:300px; line-height:1.65; }
-    .panel__shape { position:absolute; right:48px; top:50%; transform:translateY(-50%); width:160px; height:160px; border:1px solid var(--border); opacity:.4; }
-    .panel__shape--circle  { border-radius:50%; }
-    .panel__shape--diamond { clip-path:polygon(50% 0%,100% 50%,50% 100%,0% 50%); }
-    .panel__shape--pill    { border-radius:100px; width:220px; height:80px; }
-    .panel__accent { color:var(--accent); }
-    .btn--panel { align-self:flex-start; margin-top:28px; display:inline-flex; align-items:center; gap:8px; padding:13px 32px; background:transparent; color:var(--fg); border:1px solid rgba(255,255,255,0.14); border-radius:100px; font-size:11px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; cursor:none; position:relative; overflow:hidden; will-change:transform; transition:border-color .25s,color .25s; }
+    /* BENTO GRID — reemplaza horizontal scroll */
+    .bento { display:grid; grid-template-columns:1fr 1fr; grid-template-rows:auto auto; gap:1px; background:var(--border); }
+    .bento__item { background:var(--bg); padding:72px 56px; display:flex; flex-direction:column; justify-content:flex-end; min-height:380px; position:relative; overflow:hidden; transition:background .3s; }
+    .bento__item:hover { background:var(--mid); }
+    .bento__item--large { grid-row:1 / 3; min-height:760px; }
+    .bento__item--warm { background:var(--mid); }
+    .bento__count { font-size:11px; letter-spacing:.3em; color:var(--muted); margin-bottom:auto; padding-bottom:48px; display:block; }
+    .bento__item h2 { font-size:clamp(36px,4.5vw,72px); font-weight:800; line-height:.93; letter-spacing:-.04em; margin-bottom:20px; }
+    .bento__item p  { font-size:15px; color:var(--muted); max-width:280px; line-height:1.65; }
+    .bento__shape { position:absolute; right:48px; top:48px; width:80px; height:80px; border:1px solid var(--border); opacity:.5; }
+    .bento__shape--circle  { border-radius:50%; }
+    .bento__shape--diamond { clip-path:polygon(50% 0%,100% 50%,50% 100%,0% 50%); }
+    .bento__shape--tri     { clip-path:polygon(50% 0%,100% 100%,0% 100%); }
+    .btn--panel { align-self:flex-start; margin-top:28px; display:inline-flex; align-items:center; gap:8px; padding:13px 32px; background:transparent; color:var(--fg); border:1px solid rgba(245,158,11,0.2); border-radius:100px; font-size:11px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; cursor:none; will-change:transform; transition:border-color .25s,color .25s; }
     .btn--panel:hover { border-color:var(--accent); color:var(--accent); }
     .btn--panel .arrow { transition:transform .25s; }
     .btn--panel:hover .arrow { transform:translateX(3px); }
 
-    .bigtext { padding:180px 48px; }
-    .bigtext__line { font-size:clamp(44px,8vw,120px); font-weight:800; line-height:1.05; letter-spacing:-.04em; clip-path:inset(0 100% 0 0); }
-
-    .draw { padding:120px 48px; display:flex; justify-content:center; }
-    .draw svg { width:100%; max-width:700px; overflow:visible; }
+    /* METRICS STRIP */
+    .metrics { display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--border); border-top:1px solid var(--border); border-bottom:1px solid var(--border); }
+    .metric { background:var(--bg); padding:56px 40px; display:flex; flex-direction:column; gap:10px; }
+    .metric__num { font-size:clamp(44px,6vw,80px); font-weight:800; line-height:1; letter-spacing:-.04em; color:var(--accent); font-variant-numeric:tabular-nums; }
+    .metric__label { font-size:11px; letter-spacing:.18em; text-transform:uppercase; color:var(--muted); }
+    @media (max-width:767px) { .bento { grid-template-columns:1fr; } .bento__item--large { min-height:400px; } .metrics { grid-template-columns:1fr 1fr; } }
 
     .cards { padding:120px 48px; }
     .cards__header { margin-bottom:80px; }
@@ -110,6 +121,12 @@
     .cta__title { font-size:clamp(52px,8.5vw,130px); font-weight:800; letter-spacing:-.04em; line-height:.93; }
     .btn { display:inline-flex; align-items:center; justify-content:center; padding:22px 56px; background:var(--accent); color:#000; font-size:13px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; border:none; border-radius:100px; cursor:none; position:relative; overflow:hidden; min-width:220px; min-height:64px; }
     .btn__text { position:relative; z-index:1; display:block; }
+
+    .clients { padding:80px 48px; border-top:1px solid var(--border); }
+    .clients__eyebrow { font-size:11px; letter-spacing:.3em; text-transform:uppercase; color:var(--muted); margin-bottom:48px; }
+    .clients__logos { display:flex; align-items:center; gap:clamp(32px,5vw,72px); flex-wrap:wrap; }
+    .clients__logo { font-size:clamp(20px,3.5vw,36px); font-weight:800; letter-spacing:-.03em; color:rgba(255,255,255,.18); opacity:0; transform:translateY(18px); transition:color .35s; cursor:default; }
+    .clients__logo:hover { color:rgba(255,255,255,.7); }
 
     .footer { padding:56px 48px; border-top:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; }
     .footer__logo   { font-size:13px; font-weight:700; letter-spacing:.2em; text-transform:uppercase; }
@@ -155,11 +172,17 @@
   </nav>
 
   <section class="hero">
-    <div class="hero__spline" id="heroEffectMount" aria-hidden="true"></div>
-    <div class="hero__eyebrow" id="heroEyebrow">Product · AI · LatAm</div>
-    <h1 class="hero__title" id="heroTitle">Work</h1>
-    <p class="hero__sub" id="heroSub"></p>
-    <div class="hero__badge" id="heroBadge">Product<br>Manager</div>
+    <div class="hero__visual">
+      <div class="hero__spline" id="heroEffectMount" aria-hidden="true"></div>
+      <div id="heroSpotlight" aria-hidden="true"></div>
+      <div class="hero__badge" id="heroBadge">PM Técnico</div>
+    </div>
+    <div class="hero__divider" aria-hidden="true"></div>
+    <div class="hero__content">
+      <div class="hero__eyebrow" id="heroEyebrow">Product · AI · LatAm</div>
+      <h1 class="hero__title" id="heroTitle">Portfolio.</h1>
+      <p class="hero__sub" id="heroSub"></p>
+    </div>
     <div class="hero__scroll-hint">&#x2193; scroll</div>
   </section>
 
@@ -180,57 +203,41 @@
     </div>
   </div>
 
-  <section id="features">
-    <div id="featuresContainer">
-      <div class="features__dots" aria-hidden="true">
-        <div class="features__dot active"></div>
-        <div class="features__dot"></div>
-        <div class="features__dot"></div>
-      </div>
-      <div class="features__track" id="featuresTrack">
-        <div class="panel">
-          <span class="panel__count">01 &#x2014; 03</span>
-          <h2>AI<br>Products</h2>
-          <p>Bots, pipelines y CLIs que automatizan flujos reales con LLMs.</p>
-          <button class="btn--panel" data-magnetic data-modal-title="AI Products" data-modal-text="Construcción de productos con GPT-4o-mini, n8n y APIs de mensajería. Cada automatización ataca un flujo real con KPIs medibles desde el día 1.">
-            Ver enfoque <span class="arrow">&#x2192;</span>
-          </button>
-          <div class="panel__shape panel__shape--circle"></div>
-        </div>
-        <div class="panel">
-          <span class="panel__count panel__accent">02 &#x2014; 03</span>
-          <h2>Reverse<br>Engineering</h2>
-          <p>APIs bancarias y e-commerce desbloqueadas desde terminal.</p>
-          <button class="btn--panel" data-magnetic data-modal-title="Reverse Engineering" data-modal-text="Recon de APIs protegidas por WAF (Akamai, Cloudflare). Intercepción de tráfico mobile, análisis de fingerprinting y construcción de CLIs funcionales sin SDK oficial.">
-            Ver enfoque <span class="arrow">&#x2192;</span>
-          </button>
-          <div class="panel__shape panel__shape--diamond"></div>
-        </div>
-        <div class="panel">
-          <span class="panel__count">03 &#x2014; 03</span>
-          <h2>MCP<br>Servers</h2>
-          <p>Herramientas que Claude Code puede operar directamente.</p>
-          <button class="btn--panel" data-magnetic data-modal-title="MCP Servers" data-modal-text="Model Context Protocol: servidores que exponen APIs como herramientas nativas para Claude Code. Interbank, Plaza Vea y más — operables desde cualquier agente compatible.">
-            Ver enfoque <span class="arrow">&#x2192;</span>
-          </button>
-          <div class="panel__shape panel__shape--pill"></div>
-        </div>
-      </div>
-    </div>
+  <section class="bento" id="features">
+    <article class="bento__item bento__item--large" data-modal-title="AI Products" data-modal-text="Construcción de productos con GPT-4o-mini, n8n y APIs de mensajería. Cada automatización ataca un flujo real con KPIs medibles desde el día 1.">
+      <span class="bento__count">01 — 03</span>
+      <h2>AI<br>Products</h2>
+      <p>Bots, pipelines y CLIs que automatizan flujos reales con LLMs.</p>
+      <button class="btn--panel" data-magnetic data-modal-title="AI Products" data-modal-text="Construcción de productos con GPT-4o-mini, n8n y APIs de mensajería. Cada automatización ataca un flujo real con KPIs medibles desde el día 1.">
+        Ver enfoque <span class="arrow">&#x2192;</span>
+      </button>
+      <div class="bento__shape bento__shape--circle"></div>
+    </article>
+    <article class="bento__item" data-modal-title="Reverse Engineering" data-modal-text="Recon de APIs protegidas por WAF (Akamai, Cloudflare). Intercepción de tráfico mobile, análisis de fingerprinting y construcción de CLIs funcionales sin SDK oficial.">
+      <span class="bento__count" style="color:var(--accent)">02 — 03</span>
+      <h2>Reverse<br>Eng.</h2>
+      <p>APIs bancarias y e-commerce desbloqueadas desde terminal.</p>
+      <button class="btn--panel" data-magnetic data-modal-title="Reverse Engineering" data-modal-text="Recon de APIs protegidas por WAF (Akamai, Cloudflare). Intercepción de tráfico mobile, análisis de fingerprinting y construcción de CLIs funcionales sin SDK oficial.">
+        Ver enfoque <span class="arrow">&#x2192;</span>
+      </button>
+      <div class="bento__shape bento__shape--diamond"></div>
+    </article>
+    <article class="bento__item bento__item--warm" data-modal-title="MCP Servers" data-modal-text="Model Context Protocol: servidores que exponen APIs como herramientas nativas para Claude Code. Interbank, Plaza Vea y más — operables desde cualquier agente compatible.">
+      <span class="bento__count">03 — 03</span>
+      <h2>MCP<br>Servers</h2>
+      <p>Herramientas que Claude Code puede operar directamente.</p>
+      <button class="btn--panel" data-magnetic data-modal-title="MCP Servers" data-modal-text="Model Context Protocol: servidores que exponen APIs como herramientas nativas para Claude Code. Interbank, Plaza Vea y más — operables desde cualquier agente compatible.">
+        Ver enfoque <span class="arrow">&#x2192;</span>
+      </button>
+      <div class="bento__shape bento__shape--tri"></div>
+    </article>
   </section>
 
-  <section class="bigtext">
-    <p class="bigtext__line" id="bigLine1">Data en decisiones.</p>
-    <p class="bigtext__line" id="bigLine2">Decisiones en productos.</p>
-    <p class="bigtext__line" style="color:var(--accent);" id="bigLine3">Productos en impacto.</p>
-  </section>
-
-  <div class="draw">
-    <svg viewBox="0 0 700 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path id="svgPath1" d="M 10 60 C 100 10, 200 110, 350 60 C 500 10, 600 110, 690 60" stroke="#c8ff00" stroke-width="1.5" stroke-linecap="round"/>
-      <path id="svgPath2" d="M 10 80 Q 350 20 690 80" stroke="rgba(255,255,255,0.12)" stroke-width="1" stroke-linecap="round"/>
-      <path id="svgPath3" d="M 10 40 Q 350 100 690 40" stroke="rgba(255,255,255,0.06)" stroke-width="1" stroke-linecap="round"/>
-    </svg>
+  <div class="metrics">
+    <div class="metric"><span class="metric__num" data-target="23">0</span><span class="metric__label">APIs desbloqueadas</span></div>
+    <div class="metric"><span class="metric__num" data-target="4">0</span><span class="metric__label">CLIs en producción</span></div>
+    <div class="metric"><span class="metric__num" data-target="3">0</span><span class="metric__label">Bancos automatizados</span></div>
+    <div class="metric"><span class="metric__num" data-target="1">0</span><span class="metric__label">Bot clínico WhatsApp</span></div>
   </div>
 
   <section class="cards" id="work">
@@ -240,6 +247,17 @@
     </div>
     <div class="cards__grid" id="cardsGrid">
       <!-- JS genera las cards desde portfolio.js -->
+    </div>
+  </section>
+
+  <section class="clients">
+    <p class="clients__eyebrow">Empresas y proyectos</p>
+    <div class="clients__logos">
+      <span class="clients__logo">BBVA</span>
+      <span class="clients__logo">Interbank</span>
+      <span class="clients__logo">PlazaVea</span>
+      <span class="clients__logo">Vesalio</span>
+      <span class="clients__logo">PUCP</span>
     </div>
   </section>
 
@@ -310,9 +328,9 @@
       await load('./assets/vendors/' + files[name]);
       const base = { el: mount, mouseControls: true, touchControls: true, gyroControls: false };
       const opts = {
-        NET:   { ...base, color: 0xc8ff00, backgroundColor: 0x080808, points: 9, maxDistance: 22 },
-        FOG:   { ...base, highlightColor: 0x4dff00, midtoneColor: 0x1a1a1a, lowlightColor: 0x080808, baseColor: 0x0a0a0a, blurFactor: 0.6 },
-        RINGS: { ...base, color: 0xc8ff00, backgroundColor: 0x080808 },
+        NET:   { ...base, color: 0xf59e0b, backgroundColor: 0x0c0a06, points: 9, maxDistance: 22 },
+        FOG:   { ...base, highlightColor: 0xf59e0b, midtoneColor: 0x17130d, lowlightColor: 0x0c0a06, baseColor: 0x100d08, blurFactor: 0.6 },
+        RINGS: { ...base, color: 0xf59e0b, backgroundColor: 0x0c0a06 },
       };
       window.VANTA[name](opts[name]);
     }
