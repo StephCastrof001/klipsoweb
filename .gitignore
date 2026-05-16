@@ -7,6 +7,16 @@ benchmark/crue-creative/
 benchmark/hover-effect/
 benchmark/responsive-sidebar-submenu/
 benchmark/css-navbar-effect/
+# Terminal / CLI
+benchmark/terminal-portfolio-vanilla/
+benchmark/terminal-portfolio-react/
+benchmark/jquery-terminal/
+# Glitch / RE
+benchmark/hacker-portfolio/
+# AI Chat / RAG
+benchmark/chat-portfolio-widget/
+benchmark/smart-portfolio-rag/
+benchmark/chat-with-me/
 gsap-skills-ref/
 ui-ux-pro-max-skill/
 

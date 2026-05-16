@@ -152,25 +152,136 @@ heroTitle:  "Hola."
 
 ---
 
+## M5 — Terminal CLI (pendiente)
+
+**Filosofía:** El portfolio ES una CLI. Auténtico para un PM que construye CLIs reales (BBVA, PlazaVea, Interbank). Sin backend — respuestas pre-escritas en `portfolio.js`. Si se activa el AI layer, los comandos pasan por FastAPI + RAG.
+
+### Para activar
+
+```javascript
+// portfolio.js
+model:      "M5"
+heroEffect: "terminal"
+heroTitle:  "~$"
+```
+
+```css
+/* tokens.css — Layer 2b: activar preset monospace */
+--font-body:    "JetBrains Mono", "Fira Code", monospace;
+--font-display: "JetBrains Mono", "Fira Code", monospace;
+```
+
+### Comandos disponibles (fake shell)
+
+```
+help        → lista comandos
+about       → bio en una línea
+projects    → lista proyectos con stack
+skills      → stack técnico
+contact     → email + LinkedIn
+clear       → limpia pantalla
+```
+
+### Fuentes benchmark
+- `benchmark/terminal-portfolio-vanilla/` — engine typewriter, commandsList pattern
+- `benchmark/jquery-terminal/` — alternativa: `jquery.terminal.min.js` como engine
+- `benchmark/terminal-portfolio-react/` — referencia UX de comandos
+
+### Restricciones (ver `benchmark/COMPAT.md`)
+- Sin custom cursor (terminal maneja el propio)
+- Sin horizontal scroll (rompe UX de shell)
+- Sin SplitText/ScrambleText (estética incompatible)
+- RAG: se integra como comando `ask <pregunta>`, no como widget flotante
+
+---
+
+## M6 — Glitch / RE identity (pendiente)
+
+**Filosofía:** PM que hace reverse engineering de APIs bancarias. Estética hacker coherente con el trabajo real. Clip-path + chromatic aberration GSAP — sin Three.js extra (usa GSAP ya cargado).
+
+### Para activar
+
+```javascript
+// portfolio.js
+model:      "M6"
+heroEffect: "glitch"
+heroTitle:  "RE."
+```
+
+```css
+/* tokens.css — Layer 2b: misma System UI, añadir scanlines */
+--font-body:    system-ui, monospace;
+--font-display: system-ui, monospace;
+```
+
+### Técnicas clave
+
+```javascript
+// Chromatic aberration — text-shadow offset RGB
+.glitch-text {
+  text-shadow: 2px 0 #ff003c, -2px 0 #00ffff;
+  animation: glitch-anim 0.3s infinite;
+}
+
+// Clip-path strips (GSAP)
+gsap.to('.strip', {
+  clipPath: 'inset(0 0 100% 0)',
+  stagger: 0.05,
+  duration: 0.3,
+  ease: 'power2.in'
+});
+
+// Scanlines overlay (CSS puro)
+.scanlines::after {
+  content: '';
+  position: fixed; inset: 0;
+  background: repeating-linear-gradient(
+    0deg, transparent, transparent 2px,
+    rgba(0,0,0,0.07) 2px, rgba(0,0,0,0.07) 4px
+  );
+  pointer-events: none; z-index: 9999;
+}
+```
+
+### ScrambleText — el efecto natural de M6
+
+```javascript
+// En hover de cualquier texto
+gsap.to('.nav-link', {
+  scrambleText: { text: '{original}', chars: '01ABCDEF', speed: 0.5 },
+  duration: 0.6,
+  ease: 'none'
+});
+```
+
+### Fuentes benchmark
+- `benchmark/hacker-portfolio/` — kernel code aesthetic, typing-reactive logic
+- SARSHIJ cyberpunk — no tiene repo público, técnicas documentadas en `benchmark/EVALUATIONS.md`
+- Three.js glitch shader — estudiar en threejs.org/examples, copiar GLSL si se necesita
+
+---
+
 ## Evaluación comparativa — 7 dimensiones (mismo criterio que benchmark)
 
-| Dimensión | Peso | M1 Dark Tech | M2 Spline 3D | M3 Fog Luxury | M4 Minimal |
-|---|---|---|---|---|---|
-| Impacto visual | ×2 | 7 | 8 | 8 | 5 |
-| Adecuación al rol | ×2 | 7 | 6 | 5 | 8 |
-| Diferencial | ×1.5 | 6 | 8 | 7 | 4 |
-| UX / Navegabilidad | ×1.5 | 7 | 6 | 7 | 9 |
-| Performance | ×1 | 6 | 5 | 6 | 10 |
-| Mobile | ×1 | 6 | 4 | 6 | 9 |
-| Implementación | ×1 | 8 | 2 | 2 | 2 |
-| **Score ponderado** | — | **6.75** | **5.9** | **6.3** | **6.6** |
+| Dimensión | Peso | M1 Dark Tech | M2 Spline 3D | M3 Fog Luxury | M4 Minimal | M5 Terminal | M6 Glitch |
+|---|---|---|---|---|---|---|---|
+| Impacto visual | ×2 | 7 | 8 | 8 | 5 | 6 | 9 |
+| Adecuación al rol | ×2 | 7 | 6 | 5 | 8 | **10** | 8 |
+| Diferencial | ×1.5 | 6 | 8 | 7 | 4 | **9** | 8 |
+| UX / Navegabilidad | ×1.5 | 7 | 6 | 7 | 9 | 7 | 6 |
+| Performance | ×1 | 6 | 5 | 6 | 10 | **9** | 8 |
+| Mobile | ×1 | 6 | 4 | 6 | 9 | 5 | 6 |
+| Implementación | ×1 | 8 | 2 | 2 | 2 | 2 | 2 |
+| **Score ponderado** | — | **6.75** | **5.9** | **6.3** | **6.6** | **7.1** | **7.4** |
 
 **Lectura:**
-- M1 gana en implementación (funcional) y balance general — mejor punto de partida
-- M4 lidera en performance + mobile; ideal para audiencia no técnica / reclutadores
-- M2 penalizado fuerte por escena Spline inexistente (implementación: 2)
-- M3 baja en adecuación al rol — fog luxury comunica creative director, no PM técnico
-- **Gap compartido M1–M4:** contenido placeholder. M1 con proyectos reales + métricas → ~8.5
+- M6 Glitch lidera en score proyectado — diferencial visual máximo + coherente con perfil RE
+- M5 Terminal tiene la mayor adecuación al rol (10) — 3 CLIs reales en producción lo avalan
+- M1 gana en implementación (único funcional hoy)
+- M4 lidera en performance + mobile — para audiencia no técnica
+- M2 penalizado por escena Spline inexistente
+- M3 baja en adecuación al rol — communica creative director, no PM técnico
+- **Gap compartido M1–M6:** contenido placeholder. Cualquier modelo con proyectos reales + métricas sube ~1.5 puntos
 
 Referencia benchmark: `benchmark/EVALUATIONS.md` — mismos pesos aplicados a elenacalvillo.com (8.4/10).
 

@@ -5,6 +5,8 @@
 
 ```bash
 cd klipso_web/benchmark
+
+# Visual / efectos
 git clone --depth=1 https://github.com/tengbao/vanta vanta
 git clone --depth=1 https://github.com/airbnb/lottie-web lottie-web
 git clone --depth=1 https://github.com/oframe/ogl ogl
@@ -14,10 +16,21 @@ git clone --depth=1 https://github.com/robin-dela/hover-effect hover-effect
 git clone --depth=1 https://github.com/bedimcode/responsive-sidebar-submenu responsive-sidebar-submenu
 git clone --depth=1 https://github.com/priontoabdullah/CSS-NavBar-Effect css-navbar-effect
 
-# RAG Portfolio — referencia (NO clonar, estudiar online)
-# medevs/smart-portfolio     → Next.js + LangChain + Supabase pgvector
-# cameronobriendev/n8n-rag   → n8n + Neon pgvector + OpenAI (ruta recomendada)
-# neon.com/guides/rag-portfolio → FastAPI + pgvector (ruta Python)
+# Terminal / CLI (M5)
+git clone --depth=1 https://github.com/TechSpiritSS/Terminal-Portfolio terminal-portfolio-vanilla
+git clone --depth=1 https://github.com/satnaing/terminal-portfolio terminal-portfolio-react
+git clone --depth=1 https://github.com/jcubic/jquery.terminal jquery-terminal
+
+# Glitch / RE (M6)
+git clone --depth=1 https://github.com/IlyaAgarishev/hacker-portfolio hacker-portfolio
+
+# AI Chat / RAG (Capa 2 — referencia arquitectura)
+git clone --depth=1 https://github.com/JeffreytheCoder/chat-portfolio chat-portfolio-widget
+git clone --depth=1 https://github.com/medevs/smart-portfolio smart-portfolio-rag
+git clone --depth=1 https://github.com/kamaalsultan/chat-with-me chat-with-me
+
+# SARSHIJ cyberpunk — NO tiene repo público
+# Three.js glitch shader — estudiar en threejs.org/examples
 ```
 
 ## Qué extraemos de cada repo → `vanilla/web/assets/vendors/`
