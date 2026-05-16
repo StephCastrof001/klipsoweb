@@ -118,6 +118,71 @@ No hay un repo viral — es un patrón de *contenido*, no de código.
 
 ---
 
+## 3. aucadian.com.au
+
+**URL:** https://aucadian.com.au/
+**Stack:** WordPress + Semplice 5 (theme $89) + jQuery — sin GSAP, sin WebGL, sin animaciones
+**Rol:** Graphic, Web, UI, UX, Product Designer
+**Screenshoteada:** 2026-05-16
+
+### Evaluación
+
+| Dimensión | Score | Evidencia |
+|---|---|---|
+| Impacto visual ×2 | 6 | Dark limpio pero completamente estático. Sin animaciones, sin scroll reveals, sin cursor. Foto real rescata. |
+| Adecuación al rol ×2 | 8 | Claim claro. Logos Google + Red Bull + Qantas = social proof brutal en 2 segundos. |
+| Diferencial ×1.5 | 7 | Los clientes son el diferencial, no el diseño. Sin logos reconocibles sería portfolio genérico. |
+| UX / Navegabilidad ×1.5 | 7 | Scroll vertical limpio, proyectos jerarquizados, fácil escanear. Sin navbar sticky visible. |
+| Performance ×1 | 8 | jQuery + Semplice optimizado + SG Cache. Rápido para WordPress. |
+| Mobile ×1 | 7 | Responsive, se adapta bien. |
+| Implementación ×1 | 10 | Vivo, contenido real, clientes reales. |
+
+**Score ponderado:** (6×2 + 8×2 + 7×1.5 + 7×1.5 + 8×1 + 7×1 + 10×1) / 10 = **7.3 / 10**
+
+---
+
+## Estructura base compartida — klipso_web vs aucadian
+
+> La combinación de secciones y el orden son casi idénticos.
+> La diferencia es la capa de efectos (estático vs WebGL + GSAP) y el contenido.
+
+```
+SECCIÓN          AUCADIAN                        KLIPSO_WEB M1
+─────────────────────────────────────────────────────────────────
+Navbar           Logo izq + 2 links der          Logo izq + links der       ✅ igual
+Hero             Large type + foto derecha        Large type + Vanta WebGL   ~ similar
+Trabajo          Cards verticales + screenshot    Horizontal scroll + cards  ~ misma intención
+Skills/Intereses "Passion areas" 3 columnas text  Sección bigtext            ~ similar
+Social proof     "I've worked with" logos         ❌ no existe aún           🔲 gap
+Footer           Minimal                          Minimal                    ✅ igual
+```
+
+### Gap crítico identificado — sección "I've worked with"
+
+Aucadian tiene logos de Google, Red Bull, Qantas, NITRO, Channel 10, Woolworths.
+Nosotros tenemos los equivalentes: **BBVA, Interbank, PlazaVea, Clínica Vesalio**.
+
+Agregar esta sección al M1 actual duplica el social proof sin tocar el diseño.
+
+### Lo que nosotros tenemos que Aucadian no tiene
+
+| Efecto | Impacto |
+|---|---|
+| Vanta NET WebGL | Hero memorable vs hero estático |
+| Horizontal scroll pinned (GSAP) | Navegación diferencial vs scroll normal |
+| SplitText reveals | Jerarquía visual dinámica vs estática |
+| Scroll-aware navbar con blur | Polish de detalle vs navbar fija |
+| Custom cursor magnético | Marca técnica vs cursor estándar |
+
+### Lecciones para klipso_web
+
+- **La estructura aucadian ES nuestra estructura** — validado por un portfolio real en producción con clientes de peso.
+- **Prioridad #1**: agregar sección "Worked with / Clients" con logos BBVA + Interbank + PlazaVea + Vesalio en M1.
+- **Prioridad #2**: foto real en el hero — ambos (Elena + Aucadian) la tienen, nosotros no.
+- **La capa de efectos GSAP/WebGL es nuestro diferencial** — Aucadian lo hace sin efectos y llega a 7.3. Nosotros con efectos + contenido real llegaríamos a 8.5+.
+
+---
+
 ## Decisión arquitectural pendiente
 
 > ¿Este portfolio es un sitio vanilla con efectos o una app Next.js con backend RAG?
