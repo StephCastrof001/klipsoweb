@@ -152,6 +152,30 @@ heroTitle:  "Hola."
 
 ---
 
+## Evaluación comparativa — 7 dimensiones (mismo criterio que benchmark)
+
+| Dimensión | Peso | M1 Dark Tech | M2 Spline 3D | M3 Fog Luxury | M4 Minimal |
+|---|---|---|---|---|---|
+| Impacto visual | ×2 | 7 | 8 | 8 | 5 |
+| Adecuación al rol | ×2 | 7 | 6 | 5 | 8 |
+| Diferencial | ×1.5 | 6 | 8 | 7 | 4 |
+| UX / Navegabilidad | ×1.5 | 7 | 6 | 7 | 9 |
+| Performance | ×1 | 6 | 5 | 6 | 10 |
+| Mobile | ×1 | 6 | 4 | 6 | 9 |
+| Implementación | ×1 | 8 | 2 | 2 | 2 |
+| **Score ponderado** | — | **6.75** | **5.9** | **6.3** | **6.6** |
+
+**Lectura:**
+- M1 gana en implementación (funcional) y balance general — mejor punto de partida
+- M4 lidera en performance + mobile; ideal para audiencia no técnica / reclutadores
+- M2 penalizado fuerte por escena Spline inexistente (implementación: 2)
+- M3 baja en adecuación al rol — fog luxury comunica creative director, no PM técnico
+- **Gap compartido M1–M4:** contenido placeholder. M1 con proyectos reales + métricas → ~8.5
+
+Referencia benchmark: `benchmark/EVALUATIONS.md` — mismos pesos aplicados a elenacalvillo.com (8.4/10).
+
+---
+
 ## Lecciones de referencia — elenacalvillo.com (score 8.4/10)
 
 Evaluación completa en `benchmark/EVALUATIONS.md`.
